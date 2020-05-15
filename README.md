@@ -6,6 +6,14 @@ nbextension that will allow to embed widgets into layouts one.
 
 ## Installation 
 
+### On local
+
+```bash
+python3 -m virtualenv <your-env>
+source <your-env>/bin/activate
+pip install -r requirements.txt
+```
+
 ## Test
 
 ## Documentation
