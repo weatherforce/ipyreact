@@ -10,3 +10,7 @@ pages:
     stage: pages
     script: 
     - sphinx-build -b html docs/source public
+    artifacts:
+        paths:
+            - public
+       
