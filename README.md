@@ -17,3 +17,12 @@ pip install -r requirements.txt
 ## Test
 
 ## Documentation
+
+To create the documentation locally:
+```bash
+cd docs
+make html
+```
+the html files created will be located in build/html.
+
+to have a look at existing documentation, check it out here, it is online [wiki page](https://weatherforce-platform.gitlab.io/ipyreactwidgets/).
