@@ -25,4 +25,4 @@ make html
 ```
 the html files created will be located in build/html.
 
-to have a look at documentation, check out the [wiki page](https://gitlab.com/weatherforce-platform/ipyreactwidgets/-/wikis/home).
+to have a look at existing documentation, check it out here, it is online [wiki page](https://weatherforce-platform.gitlab.io/ipyreactwidgets/).
