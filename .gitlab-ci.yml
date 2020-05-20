@@ -1,0 +1,12 @@
+image: "python:3.7"
+
+before_script:
+    - pip install -r requirements.txt
+    
+stages:
+    - pages 
+
+pages:
+    stage: pages
+    script: 
+    - sphinx-build -b html docs/source public
