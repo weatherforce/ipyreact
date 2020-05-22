@@ -10,6 +10,7 @@ Welcome to ipyreactwidget's documentation!
    :maxdepth: 2
 
    nbextension_trial
+   comms_trial
 
    :caption: Contents:
 
