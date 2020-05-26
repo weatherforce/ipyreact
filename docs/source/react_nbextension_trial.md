@@ -29,7 +29,7 @@ Webpack is a bundler, it fetch source code, and create an output that is simpler
 ```bash
 yarn add webpack webpack-cli --dev
 ```
-To work with webpack, it needs a configuration files, called webpack.config.js. It's a quiet simple, following the documentation, we will add a simple webpack config: 
+To work with webpack, it needs a configuration files, called webpack.config.js. It's a quiet simple, following the documentation, we will provide a first iteration: 
  
 ```bash
 
@@ -50,7 +50,8 @@ module.exports = {
   	},
 };
 ```
-
+What we are doing in this configs, is simply read from entry point index.js in src folder, and create an output in dist folder.So for now, it is not very useful... It will soon be though ! 
+Now we need to automatize the bundling, by making scripts into our package.json.
 
 let's add a watch, dev and build script to our project:
 
@@ -81,8 +82,9 @@ webpack stuff
 main.js
 
 ```
+I don't really want to cover all webpack options here, but just remember that -p stands for production, which is minimified to be as light as possible. but it isn't the best way to debug your code. To do so we have the development bundling command which is dev script, that can be sometime useful. Yet the best one would definetly be watch script, that will automatically rebundle your code every time it detects a change on one of the sources files concerned by the bundle. 
 
-### Adding React into the equation
+### Adding React to the equation
 
 ```bash
 yarn add react react-dom
