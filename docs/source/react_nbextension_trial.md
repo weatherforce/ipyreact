@@ -4,33 +4,32 @@
 
 The goal here is to explore webpack ability to pass from JSX with ES6 way of handling import/export into an AMD "compliant" bundle. The idea behind is to find a way to make widgets using React on front end as an alternative of Ipywidget and its uses of BackBone framework. 
 
-## Initial set up
+## setting up
 
-### setting up the project 
+### general set up
+
+To begin with, I suggest that you create a dedicated space for your trial to live in. The reason why is that by the end of this cookbook, we will have created a bunch of configuration files, code sources, and production code. In addition, we will use Node Package Manager, to import React, babel and webpack. Make sure you have npm or even better, yarn installed.
+
+> Note: make sure your package manager is up to date
+
+So let's create a basic set up for a node package
 
 ```bash
 mkdir react_extension
 cd react_extension
 yarn init
-touch index.js 
+mkdir src dist
+touch src/index.js 
 ```
 
-### basic webpack set up 
+### Installing Webpack 
+
+Webpack is a bundler, it fetch source code, and create an output that is simpler to manipulate. that's it whole purpose, but by binding webpack with some other services such as babel, you can minify it, or even transpile it into diferents version of javascript, and this is mandatory to be browser compliant. So let's install webpack as a development dependency:   
 
 ```bash
 yarn add webpack webpack-cli --dev
 ```
-
-Following good practices, we will create both src/ and dist/ folders:
-
-```bash
-mkdir src
-mv index.js src/
-mkdir dist/
-	
-```
-
-Let's add basic configs to webpack:
+To work with webpack, it needs a configuration files, called webpack.config.js. It's a quiet simple, following the documentation, we will add a simple webpack config: 
  
 ```bash
 
@@ -50,40 +49,45 @@ module.exports = {
    		path: path.resolve(__dirname, 'dist'),
   	},
 };
+```
 
-```	
 
 let's add a watch, dev and build script to our project:
 
 within your project package.json:
 
-```
+```javascript
 scripts:{
 	"build": "webpack -p",
 	"watch": "webpack --watch",
 	"dev": "webpack --mode development"
 }
-```	
+```
 
 Now if you run:
 
 ```bash
+
 yarn build && ls dist/
-```	
+
+```
 
 should give this output:
 
 ```bash
+
 webpack stuff
 ...
 main.js
-```	
+
+```
 
 ### Adding React into the equation
 
 ```bash
 yarn add react react-dom
-```	
+```
+
 Once installed, we can start to write some code and try to build it.
 
 editing index.js
@@ -101,12 +105,14 @@ ReactDOM.render(<App/>, document.getElementById('root'))
 then editing a brand new App.js file:
 
 ```javascript
+
 import React from 'react'
 
 const App = () =>{
 	return <h1> Hello world ! </h1>
 }
 export default App
+
 ```
 
 but now if you retry to build it will fail (try it ;)).
