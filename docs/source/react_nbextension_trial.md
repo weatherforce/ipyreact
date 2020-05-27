@@ -170,7 +170,7 @@ you can now hit `yarn build` again, and it will build.
 
 >Note:here a link to a very fine article about setting up react from scratch using webpack and babel [the article](https://www.valentinog.com/blog/babel/).
 
-### live testing 
+## live testing 
 
 Now we want to be able to test it very quick within a notebook.So we have to turn this as an extension.
 To do so, we will use asynchronous import from es6 syntax, and hopefully it will work straight away. But my intuition is that it will probably not work. 
