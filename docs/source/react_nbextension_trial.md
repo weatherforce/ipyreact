@@ -2,13 +2,13 @@
 
 ## Intro
 
-The goal here is to explore webpack ability to pass from JSX with ES6 way of handling import/export into an AMD "compliant" bundle. The idea behind is to find a way to make widgets using React on front end as an alternative of Ipywidget and its uses of BackBone framework. 
+The goal here is to explore webpack ability to pass from JSX with ES6 way of handling import/export into an AMD "compliant" bundle. The idea behind is to find a way to make widgets using React on front end as an alternative of ipywidget library and its uses of Backbone framework. 
 
 ## setting up
 
 ### general set up
 
-To begin with, I suggest that you create a dedicated space for your trial to live in. The reason why is that by the end of this cookbook, we will have created a bunch of configuration files, code sources, and production code. In addition, we will use Node Package Manager, to import React, babel and webpack. Make sure you have npm or even better, yarn installed.
+To begin with, I suggest that you create a dedicated space for your trial to live in. The reason why is that by the end of this cookbook, we will have created a bunch of configuration files, code sources, and production code. In addition, we will use Node Package Manager, to import React, babel and webpack. Make sure you have NPM or even better, yarn installed.
 
 > Note: make sure your package manager is up to date
 
@@ -24,7 +24,7 @@ touch src/index.js
 
 ### Installing Webpack 
 
-Webpack is a bundler, it fetch source code, and create an output that is simpler to manipulate. that's it whole purpose, but by binding webpack with some other services such as babel, you can minify it, or even transpile it into diferents version of javascript, and this is mandatory to be browser compliant. So let's install webpack as a development dependency:   
+Webpack is a bundler, it fetch source code, and create an output that is simpler to manipulate. that's it whole purpose, but by binding webpack with some other services such as babel, you can minify it, or even transpile it into different version of JavaScript, and this is mandatory to be browser compliant. So let's install webpack as a development dependency:   
 
 ```bash
 yarn add webpack webpack-cli --dev
@@ -50,7 +50,7 @@ module.exports = {
   	},
 };
 ```
-What we are doing in this configs, is simply read from entry point index.js in src folder, and create an output in dist folder.So for now, it is not very useful... It will soon be though ! 
+What we are doing in this configurations, is simply read from entry point index.js in src folder, and create an output in dist folder.So for now, it is not very useful... It will soon be though ! 
 Now we need to automatize the bundling, by making scripts into our package.json.
 
 let's add a watch, dev and build script to our project:
@@ -82,11 +82,11 @@ webpack stuff
 main.js
 
 ```
-I don't really want to cover all webpack options here, but just remember that -p stands for production, which is minimified to be as light as possible. but it isn't the best way to debug your code. To do so we have the development bundling command which is dev script, that can be sometime useful. Yet the best one would definetly be watch script, that will automatically rebundle your code every time it detects a change on one of the sources files concerned by the bundle. 
+I don't really want to cover all webpack options here, but just remember that -p stands for production, which is minimized to be as light as possible. but it isn't the best way to debug your code. To do so we have the development bundling command which is dev script, that can be sometime useful. Yet the best one would definitely be watch script, that will automatically re bundle your code every time it detects a change on one of the sources files concerned by the bundle. 
 
 ## Adding React to the equation
 
-Having nicely setted up our project, we can now enter the heart of the matter. In this section we will install React, make a very simple React Component to render, and render it into our notebook.
+Having nicely set up our project, we can now enter the heart of the matter. In this section we will install React, make a very simple React Component to render, and render it into our notebook.
 
 ### Install React
 
@@ -121,7 +121,7 @@ const App = () =>{
 export default App
 
 ```
-And its about time to build ! so `yarn build` will unfortunatly crash miserably...  Next step: be able to build!
+And its about time to build ! so `yarn build` will unfortunately crash miserably...  Next step: be able to build!
 
 ### bundling
 
@@ -277,7 +277,7 @@ module.exports = {
 	externals: ['base/js/namespace']
 };
 ```
-Oookay, lets rebuild and try it out.
+Okay, lets rebuild and try it out.
 Well well, it is not such a failure, cause it seems that the notebook extension was loaded, but nothing appear, like reactDom could not put the h1 element...
 So, just to make sure, we will add a simple console.log() into our nbextension, rebuild and see if it loads.
 Let's hello world Adele's style, in our src/index.js file:
@@ -293,7 +293,7 @@ const load_extension = () =>{
 
 and then rebuild, refresh...
 
-And still, it doesn't load... bu why? it is because of my uncomprehension of how AMD modules work. we have to export a load_ipython_extension function from our ES6 modules, that will be bundled into an AMD module, which will then expose this function the same way we did when coding extension. Long story made short, let's modify our index.js in our source to look like this. 
+And still, it doesn't load... bu why? it is because of my incomprehension of how AMD modules work. we have to export a load_ipython_extension function from our ES6 modules, that will be bundled into an AMD module, which will then expose this function the same way we did when coding extension. Long story made short, let's modify our index.js in our source to look like this. 
 
 ```javascript
 import React from 'react'
@@ -323,6 +323,6 @@ by:
 	ReactDOM.render(<App/>, document.getElementById('notebook'))
 ...
 ```
-after rebuild and launching we get a notebook with `Hello World` in it. Congrats, you've just made a jupyter nbextension with react and moderne javascript.besides, you have got all the tools to add typescript over it.
+after rebuild and launching we get a notebook with `Hello World` in it. Congrats, you've just made a jupyter nbextension with react and modern javascript.besides, you have got all the tools to add typescript over it.
 
 BOOYAH.
