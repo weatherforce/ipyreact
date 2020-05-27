@@ -26,15 +26,15 @@ Here you  are setup to create your very first notebook extension, congrats.
 
 ## What is a notebook extension and what is it used for?
 
-You can consider a notebook extension as a javascript module that will be loaded in notebooks, and or in manager screen. The idea is to provide notebook users a way to customize a bit their notebooks by extending them with some custom features, on the front end. The javascript module format used is AMD (Asynchronous Module Definition) modules specification provided by RequireJs library. So, if you want to use ES6 or JSX or any new kind of Javascript, it needs to be transpiled targeting the AMD module format. Keep that in mind if you want to use newer framework, such as React, View or Angular.
+You can consider a notebook extension as a javascript module that will be loaded in notebooks, and or in manager screen. The idea is to provide notebook users a way to customize a bit their notebooks by extending them with some custom features, on the front end. The JavaScript module format used is AMD (Asynchronous Module Definition) modules specification provided by RequireJs library. So, if you want to use ES6 or JSX or any new kind of JavaScript, it needs to be transpiled targeting the AMD module format. Keep that in mind if you want to use newer framework, such as React, View or Angular.
 
->Note: Jupyter developer team also provide what they called server extensions, which is a very cool way to extend notebook server backend, such as connect to webhooks, or provide a small API to another tools that would have the capability of connecting to this API.
+>Note: Jupyter developer team also provide what they called server extensions, which is a very cool way to extend notebook server back end, such as connect to web hooks, or provide a small API to another tools that would have the capability of connecting to this API.
 
 ## Diving in 
 
 You should have a look at [notebook extension documentation](https://jupyter-notebook.readthedocs.io/en/stable/extending/frontend_extensions.html "jupyter notebook documentation").
 
-It will provide very useful informations so it is recommended to read that. Yet, I'll try to show you how you can quickly set up your notebook extension:
+It will provide very useful information so it is recommended to read that. Yet, I'll try to show you how you can quickly set up your notebook extension:
 
 ### main.js
 
@@ -58,7 +58,7 @@ define([
     };
 });
 ```
-Let's analyse it a bit. At very first line, you have the `define` keyword that allows to ~~create~~ define an AMD module. It is say in documentation that at the very least, your AMD module should expose a load_ipython_extension function to be loaded and interact with Jupyter. It is not completly true, since you can expose an empty function like this:
+Let's analyse it a bit. At very first line, you have the `define` keyword that allows to ~~create~~ define an AMD module. It is say in documentation that at the very least, your AMD module should expose a load_ipython_extension function to be loaded and interact with Jupyter. It is not completely true, since you can expose an empty function like this:
 
 ```javascript
 ...
@@ -70,9 +70,9 @@ return {
 Your module would be loaded, and your code executed even though it is not within this special function. But it keep in mind that **it has to be an AMD module**.
 from second line to load_ipython_extension definition : this is where the magic happen ! what this piece of code is importing 'base/js/namespace' ('which by the way, contains Jupyter') dynamically which means directly from Jupyter environment. It then allows you to interact with Jupyter directly, using the Jupyter exposed object.  
 
-With that kind of stuff, you can then add buttons, or delete somes, extend notebook behaviour, such as auto_completion, create a button as link to another service annnnd, most important for us, create front end part for widgets!  
+With that kind of stuff, you can then add buttons, or delete some, extend notebook behaviour, such as auto_completion, create a button as link to another service and, most important for us, create front end part for widgets!  
 
-Ok ok that sounds good, but how do we install it? well you just had to ask my friend:
+OK OK that looks good, but how do we install it? well, you just had to ask:
 
 to install it in a normal way, just hit:  
 ```bash
@@ -85,7 +85,7 @@ jupyter nbextension enable extension/main --sys-prefix
 
 > Note again: In the doc it is said that sys-prefix flag will make the install on the current virtualenv, use --user instead if you want to install it into your main environment.
 
-So before doing that, make sure your notebook extension does something, like saying hello in the console. You then install and will receive a validation ok message. Then test it like this:
+So before doing that, make sure your notebook extension does something, like saying hello in the console. You then install and will receive a validation OK message. Then test it like this:
 
 ```bash
 jupyter notebook
@@ -94,12 +94,12 @@ jupyter notebook
 using the manager, create a new notebook and you will see that your notebook extension is loaded !  
 
 
-## TroubleShooting
+## Troubleshooting
 
-Sometimes, when messing with jupyter nbextension, you can corrupt some configuration files, it will then throw you an error right in your face, saying something about a jsonerror on a file.
-When you hit `jupyter nbextension enable` it goes into a json config file, and mess with it. But the trick is that you can have several config files, normally in `venv/etc/Jupyter/nbconfig/notebook.json`.Sometimes you will have more than one file, and they are not always easy to find. So, after looking on the web if someone had the same issue, I [found out that post](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1211)
+Sometimes, when messing with jupyter nbextension, you can corrupt some configuration files, it will then throw you an error right in your face, saying something about a json error on a file.
+When you hit `jupyter nbextension enable` it goes into a json configurations file, and mess with it. But the trick is that you can have several configurations files, normally in `venv/etc/Jupyter/nbconfig/notebook.json`.Sometimes you will have more than one file, and they are not always easy to find. So, after looking on the web if someone had the same issue, I [found out that post](https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1211)
 
-which give us a small snippet.py looking for all config files for jupyter
+which give us a small snippet.py looking for all configurations files for jupyter
 ```bash
 python snippet.py
 ```
