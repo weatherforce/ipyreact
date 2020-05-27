@@ -84,16 +84,20 @@ main.js
 ```
 I don't really want to cover all webpack options here, but just remember that -p stands for production, which is minimified to be as light as possible. but it isn't the best way to debug your code. To do so we have the development bundling command which is dev script, that can be sometime useful. Yet the best one would definetly be watch script, that will automatically rebundle your code every time it detects a change on one of the sources files concerned by the bundle. 
 
-### Adding React to the equation
+## Adding React to the equation
+
+Having nicely setted up our project, we can now enter the heart of the matter. In this section we will install React, make a very simple React Component to render, and render it into our notebook.
+
+### Install React
 
 ```bash
 yarn add react react-dom
 ```
-
 Once installed, we can start to write some code and try to build it.
 
-editing index.js
+### Writing Code 
 
+Here comes the fun part ! we need to modify our index.js file to look like the code below:
 ```javascript
 
 import React from 'react'
@@ -103,8 +107,9 @@ import App from './App'
 ReactDOM.render(<App/>, document.getElementById('root'))
 
 ```
+What we are doing here is rendering an App component into a DOM element called 'root'. If you explore a running Jupyter notebook, you won't find any 'root' element, but seriously, who cares? Right? 
 
-then editing a brand new App.js file:
+Anyway, we don't have an App yet, so we need to create it. In the same src folder create App.js and add the following to it:
 
 ```javascript
 
@@ -116,24 +121,28 @@ const App = () =>{
 export default App
 
 ```
+And its about time to build ! so `yarn build` will unfortunatly crash miserably...  Next step: be able to build!
 
-but now if you retry to build it will fail (try it ;)).
+### bundling
 
-So next steps would be to be able to build !
+According to Webpack error messages, we need a transpiler to understand JSX, which is React's javascript flavour.So, we need to call Babel at the rescue.
+Below the commands to install babel:
 
 ```bash
 yarn add @babel/core babel-loader @babel/preset-env @babel/preset-react --dev
 touch .babelrc
 ```
 
-and then, within your .babelrc
+Then, editing your .babelrc
 
 ```javascript
 {
 	"presets":["@babel/preset-env", "@babel/preset-react"]
 }
 ```
+
 let's update webpack.config.js, it should then looks like this:
+
 
 ```javascript
 const path = require('path');
@@ -157,8 +166,9 @@ module.exports = {
 	}
 };
 ```
+you can now hit `yarn build` again, and it will build.
 
-here a link to a very fine article about setting up react from scratch using webpack and babel [the article](https://www.valentinog.com/blog/babel/)
+>Note:here a link to a very fine article about setting up react from scratch using webpack and babel [the article](https://www.valentinog.com/blog/babel/).
 
 ### live testing 
 
@@ -231,19 +241,16 @@ module.exports = {
 };
 
 ```
-Then, let's remove the magic comment, rebuild, and retry the enabling
+Then, let's remove the magic comment, rebuild and refresh the notebook page.
+
+>Note: you can also set up `yarn watch` in a terminal, create a second one for jupyter notebook,  and edit code into a third one. Like this, you would just have to refresh the webpage! ;)
 
 ```bash
 yarn build
-jupyter nbextension enable react_extension/dist/main --sys-prefix
-```
-
-```bash
 jupyter notebook example.ipynb
 ```
-
-and still, it is not working. browser error says it's about an export of base/js/namespace ... so it doesn't like the dynamic import...
-by exploring webpack.config.js file in jupyter-cookiecutter, i found out that they are using a libraryTarget option setted to amd, could be the solution.
+Still, not working. browser error says it's about an export of base/js/namespace ... so it doesn't like the dynamic import...
+by exploring webpack.config.js file in jupyter-cookiecutter, I found out that they are using a libraryTarget option setted to amd, could be the solution.
 let's try to target an AMD system on webpack. 
 
 ```javascript
@@ -284,7 +291,7 @@ const load_extension = () =>{
 ...
 ```
 
-and then rebuild, and reload a notebook...
+and then rebuild, refresh...
 
 And still, it doesn't load... bu why? it is because of my uncomprehension of how AMD modules work. we have to export a load_ipython_extension function from our ES6 modules, that will be bundled into an AMD module, which will then expose this function the same way we did when coding extension. Long story made short, let's modify our index.js in our source to look like this. 
 
@@ -301,20 +308,6 @@ export const load_ipython_extension = () =>{
     	ReactDOM.render(<App/>, document.getElementById('root'))
 	})
 }
-```
-
-then we have to uninstall, then reinstall the jupyter nbextension dist (symlink doesn't work, I suspect it is because of the fact that webpack suppress the old main and then create the new one, which erase the symlink), any way you know the drill:
-
-```bash
-jupyter nbextension uninstall react_extension/dist
-jupyter nbextension install react_extension/dist/ --sys-prefix --symlink
-jupyter nbextension enable react_extension/dist/main --sys-prefix
-
-```
-Now we relaunch the notebook: 
-
-```bash
-jupyter notebook example.ipynb
 ```
 
 In the webbrowser console we see `hello from the other siiiiiide`, so it finally loaded ! I'm tempted to says Eureka, but still, React component is not rendered (yet).
