@@ -119,7 +119,7 @@ export default App
 
 but now if you retry to build it will fail (try it ;)).
 
-So next step is to be able to build !
+So next steps would be to be able to build !
 
 ```bash
 yarn add @babel/core babel-loader @babel/preset-env @babel/preset-react --dev
@@ -133,7 +133,7 @@ and then, within your .babelrc
 	"presets":["@babel/preset-env", "@babel/preset-react"]
 }
 ```
-next step is to update webpack.config.js, it should then looks like this:
+let's update webpack.config.js, it should then looks like this:
 
 ```javascript
 const path = require('path');
