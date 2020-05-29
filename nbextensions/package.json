@@ -1,0 +1,25 @@
+{
+  "name": "widget",
+  "version": "1.0.0",
+  "description": "the base code for widget building",
+  "main": "index.js",
+  "author": "weatherforce",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack -p",
+    "watch": "webpack --watch --mode development",
+    "dev": "webpack --mode development"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.9.4",
+    "babel-loader": "^8.1.0",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}
