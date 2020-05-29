@@ -12,6 +12,7 @@ Welcome to ipyreactwidget's documentation!
    nbextension_trial
    comms_trial
    react_nbextension_trial
+   react_comm_trial.md
 
    :caption: Contents:
 
