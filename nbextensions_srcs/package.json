@@ -5,6 +5,7 @@
   "main": "index.js",
   "author": "weatherforce",
   "license": "MIT",
+  "type":"module",
   "scripts": {
     "build": "webpack -p",
     "watch": "webpack --watch --mode development",
