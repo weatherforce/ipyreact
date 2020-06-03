@@ -1,12 +1,13 @@
-const path = require('path');
+var path = require('path');
 
 module.exports = {
 	entry:{
-		widget: './widget/src/index.js'	
+		widget: './nbextensions/widget/src/index.js',
+		register: './nbextensions/register/src/index.js',
 	},
     output: {
-        filename: 'index.js',
-        path: path.resolve(__dirname, '../nbextensions_dists/widget'),
+        filename: '[name]/index.js',
+        path: path.resolve(__dirname, '../nbextensions_dists/'),
         libraryTarget: 'amd',
     },
     module:{

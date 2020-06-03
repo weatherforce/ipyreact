@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import fs from 'fs';
-import path from 'path';
+let fs = require('fs');
+let path = require('path');
 
 const getNbextensionList = (folderpath) => {
 	return fs.readdirSync(folderpath)		
