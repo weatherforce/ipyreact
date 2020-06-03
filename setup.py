@@ -6,10 +6,11 @@ def generate_data_files():
     pathlist = []
     widgetlist = os.listdir(path="./nbextensions_dists")
     for a_widget in widgetlist:
-        pathlist.append((f"share/jupter/nbextensions/{a_widget}",
+        pathlist.append((f"share/jupyter/nbextensions/{a_widget}",
                          [f"nbextensions_dists/{a_widget}/index.js"]))
         pathlist.append(("etc/jupyter/nbconfig/notebook.d",
                          [f"nbextensions_dists/{a_widget}/{a_widget}.json"]))
+    return pathlist
 
 
 with open("README.md", 'r') as fh:
