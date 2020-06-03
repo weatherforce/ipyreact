@@ -2,12 +2,25 @@
 
 import fs from 'fs';
 
-const getTemplate = ()=>{
-	return JSON.parse(fs.readFileSync('template.json'))
+const getNbextensionList = (folderpath) => {
+	return fs.readdirSync(folderpath)		
+};
+
+const generateJson = (nbextension) => {
+	let extensionEnabling = {};
+	extensionEnabling[nbextension +'/main'] = true
+	return { "load_extensions": extensionEnabling }
 }
+
+const generateAllJsons = (nbextensions) => {
+	let JsonList = nbextensions.map(nbextension => generateJson(nbextension))
+	return JsonList
+}
+
 //grab provided args
 const [,, ...args] = process.argv
 
 
-
-console.log(getTemplate())
+let nbextensions = getNbextensionList("./nbextensions")
+console.log(nbextensions)
+console.log(generateAllJsons(nbextensions))
