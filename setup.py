@@ -1,4 +1,15 @@
 import setuptools
+import os
+
+
+def generate_data_files():
+    pathlist = []
+    widgetlist = os.listdir(path="./nbextensions_dists")
+    for a_widget in widgetlist:
+        pathlist.append((f"share/jupter/nbextensions/{a_widget}",
+                         [f"nbextensions_dists/{a_widget}/index.js"]))
+        pathlist.append(("etc/jupyter/nbconfig/notebook.d",
+                         [f"nbextensions_dists/{a_widget}/{a_widget}.json"]))
 
 
 with open("README.md", 'r') as fh:
@@ -13,10 +24,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="git@gitlab.com:weatherforce-platform/ipyreactwidgets.git",
-    data_files=[
-        # like jupyter nbextension install --sys-prefix
-        # like jupyter nbextension enable --sys-prefix
-    ],
+    data_files=generate_data_files(),
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
