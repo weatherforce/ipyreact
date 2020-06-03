@@ -1,5 +1,1 @@
-{
-	"load_extensions": {
-		"widget/main": true
-	}
-}
+{"load_extensions":{"widget/index":true}}
