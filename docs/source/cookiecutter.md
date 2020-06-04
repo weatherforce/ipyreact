@@ -64,7 +64,41 @@ jupyter nbextension enable --py --sys-prefix ...
 
 There you go ! the interesting parts begin just now !
 
-### 
+### Coding is on!
+
+An IpyReactWidget is a compound of a python Widget's child class, and a notebook extension (which is a javascript piece of code, interacting with jupyter) using React library.
+To have a communication between those two, Jupyter provide the comm package, which is a communication bridge between front end to back end. Here below a schema to ease comprehension.
+
+"...I have to put the schema here..."
+
+Fortunatly, you don't really have to handle the communication part, the Widgets classes on both side are meant to save you the time and trouble. Instead, you can directly focus on 
+creating your widget. To do so you will need to have a good knowledge of React in addition of Javascript and Python.
+
+To create a Widget , my advice would be to start directly with front end, creating all necessary parts, with hard coded state and props, and once it is up and running, you can then start to 
+pass state and props from python side.
+
+let's dive in! 
+
+#### Development environment
+
+Now that everything is set up, we need a way to quickly test what we are developping. to do so, you have to open at least three terminals, one for launching a notebook where you will import
+your widget, aka the TESTME.ipynb, one to launch webpack watch server, and finaly one to develop.
+
+```bash
+#first terminal
+jupyter notebook TESTME.ipynb
+
+#second terminal
+cd js
+yarn watch
+
+#third terminal
+cd js/src
+vim widget.js
+```
+then try to edit widget.js, save it, and just hit the F5 (refresh) button focused on your web browser. You will see your changes directly on screen. 
+
+Sadly, for python side changes, you will need to stop and relaunch jupyter notebook server. 
 
 ## Develop a widget directly into ipyreactwidgets  
 
