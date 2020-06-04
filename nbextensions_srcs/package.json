@@ -6,9 +6,9 @@
   "author": "weatherforce",
   "license": "MIT",
   "scripts": {
-    "build": "webpack -p",
+    "build": "webpack -p && node bin/post-build.js",
     "watch": "webpack --watch --mode development",
-    "dev": "webpack --mode development"
+    "dev": "webpack --mode development && node bin/post-build.js"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
