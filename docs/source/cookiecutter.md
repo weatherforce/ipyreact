@@ -95,4 +95,9 @@ then try to edit widget.js, save it, and just hit the F5 (refresh) button focuse
 
 Sadly, for python side changes, you will need to stop and relaunch jupyter notebook server. 
 
+### Communication from one end to the other
+
+As describe earlier, python side and front side communicate through Comms channels. Comms is a Jupyter package designed by Jupyter team, and it provides communication channels, with ways to open them from both sides.  
+In our case, the python side is the one that opens the communication. More specifically every instance are providing a target_comm, which is the channel it is opening. So you have to make sure that both sides are talking to the same channel. 
+
 [diagram1]: _static/cookiecutter_1.png
