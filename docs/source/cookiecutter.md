@@ -6,12 +6,13 @@ The following section will provide a cookbook on how to use the cookiecutter.
 
 ## Use the Cookiecutter
 
-### First step: Create an empty repository
+### First step: Create an empty repository
+
  would be to create an empty repository on gitlab, or github. Find the big button offering to create a new project and click on it.
 >Note: Do not provide any Readme or license stuff right now, we want an empty repo, and its url.
 
 
-### Second step: cookiecutter readme
+### Second step: cookiecutter readme
 
 go on [cookiecutter-ipyreact-widget](https://gitlab.com/weatherforce-platform/cookiecutter-ipyreact-widget) repository page.
 According to readme :
@@ -23,7 +24,7 @@ cookiecutter cookiecutter git@gitlab.com:weatherforce-platform/cookiecutter-ipyr
 And start filling the provided form.
 > Note: fill asked url with the repository url.
 
-### finish project initialisation 
+### Third step: finish project initialisation 
 
 Enter your widget folder, and turn it into a repository.  
 
@@ -55,21 +56,21 @@ yarn dev
 cd ..
 ```
 
-Final step: install js side on dev mode as well using Jupyter part from Readme:
+Install js side on dev mode as well using Jupyter part from Readme:
 
 ```bash
 jupyter nbextension install --py --symlink --sys-prefix ... 
 jupyter nbextension enable --py --sys-prefix ...
 ```
 
-There you go ! the interesting parts begin just now !
+There you go ! the interesting parts begins  now !
 
-### Coding is on!
+### Fourth step: code
 
 An IpyReactWidget is a compound of a python Widget's child class, and a notebook extension (which is a javascript piece of code, interacting with jupyter) using React library.
 To have a communication between those two, Jupyter provide the comm package, which is a communication bridge between front end to back end. Here below a schema to ease comprehension.
 
-"...I have to put the schema here..."
+![diagram showing a global picture of a widget's parts communicate with each other][diagram1]
 
 Fortunatly, you don't really have to handle the communication part, the Widgets classes on both side are meant to save you the time and trouble. Instead, you can directly focus on 
 creating your widget. To do so you will need to have a good knowledge of React in addition of Javascript and Python.
@@ -100,6 +101,4 @@ then try to edit widget.js, save it, and just hit the F5 (refresh) button focuse
 
 Sadly, for python side changes, you will need to stop and relaunch jupyter notebook server. 
 
-## Develop a widget directly into ipyreactwidgets  
-
-This is the second way of doing a widget, that could be complementary to the first one. The only issue with this option is that your widget should be accepted as a relevant widget for everyone to be accepted into the ipyreactwidget repository.
+[diagram1]: _static/cookiecutter_1.png
