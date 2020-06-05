@@ -1,18 +1,12 @@
-# Create a custom widget
+# Use the Cookiecutter
 
-If you are not satisfied with the current available widgets you have two options to build a custom widget.
-the first one, is building a widget externally using the [provided-cookiecutter](https://gitlab.com/weatherforce-platform/cookiecutter-ipyreact-widget)
-The following section will provide a cookbook on how to use the cookiecutter.
-
-## Use the Cookiecutter
-
-### First step: Create an empty repository
+## First step: Create an empty repository
 
  would be to create an empty repository on gitlab, or github. Find the big button offering to create a new project and click on it.
 >Note: Do not provide any Readme or license stuff right now, we want an empty repo, and its url.
 
 
-### Second step: cookiecutter readme
+## Second step: cookiecutter readme
 
 go on [cookiecutter-ipyreact-widget](https://gitlab.com/weatherforce-platform/cookiecutter-ipyreact-widget) repository page.
 According to readme :
@@ -24,7 +18,7 @@ cookiecutter cookiecutter git@gitlab.com:weatherforce-platform/cookiecutter-ipyr
 And start filling the provided form.
 > Note: fill asked url with the repository url.
 
-### Third step: finish project initialisation 
+## Third step: finish project initialisation 
 
 Enter your widget folder, and turn it into a repository.  
 
@@ -65,7 +59,7 @@ jupyter nbextension enable --py --sys-prefix ...
 
 There you go ! the interesting parts begins  now !
 
-### Fourth step: code
+## Fourth step: code
 
 An IpyReactWidget is a compound of a python Widget's child class, and a notebook extension (which is a javascript piece of code, interacting with jupyter) using React library.
 To have a communication between those two, Jupyter provide the comm package, which is a communication bridge between front end to back end. Here below a schema to ease comprehension.
@@ -80,7 +74,7 @@ pass state and props from python side.
 
 let's dive in! 
 
-#### Development environment
+### Development environment
 
 Now that everything is set up, we need a way to quickly test what we are developping. to do so, you have to open at least three terminals, one for launching a notebook where you will import
 your widget, aka the TESTME.ipynb, one to launch webpack watch server, and finaly one to develop.

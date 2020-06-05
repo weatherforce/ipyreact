@@ -10,7 +10,7 @@ Welcome to ipyreactwidget's documentation!
    :maxdepth: 2
 
    cookbook_series
-   cookiecutter
+   custom-widget
 
    :caption: Contents:
 
