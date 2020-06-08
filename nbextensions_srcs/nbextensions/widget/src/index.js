@@ -1,7 +1,7 @@
 import React from 'react'
-import {CommWrapper} from './commWrapper'
+import Widget from './widget'
+import {CommWrapper} from '../../../utils/commwrapper/commWrapper'
 
 export const load_ipython_extension = () =>{
-	console.log("hello")
-	CommWrapper()
+	CommWrapper("widget_comm", Widget)
 }
