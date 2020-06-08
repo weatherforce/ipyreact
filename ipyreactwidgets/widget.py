@@ -3,11 +3,11 @@ from ipykernel.comm import Comm
 
 class Widget:
 
-    def __init__(self, state: dict, props: dict, children=[]):
-        self.widget_id = "widget"
-        self.target_name = "widget_comm"
-        self.state = state
-        self.props = props
+    def __init__(self, name: str,  children=[]):
+        self.widget_id = name
+        self.target_name = f"{self.widget_id}_comm"
+        self.state = {}
+        self.props = {}
         self.children = children
         self.setcommunication()
 
@@ -33,5 +33,5 @@ class Widget:
 
     def __repr__(self):
         self.setcommunication(render="cell")
-        return f"<Widget target_name=${self.target_name} state=${self.state}\
-            props=${self.props}>"
+        return f"<Widget target_name={self.target_name} state={self.state}\
+            props={self.props}>"

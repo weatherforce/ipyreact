@@ -16,9 +16,11 @@ class BreadCrumbs extends Widget {
 	}
 
 	render(){
-		<Breadcrumbs aria-label="breadcrumb">
-			{this.processCrumbs(this.state.pathlist)}
-		</Breadcrumbs>
+		return(
+			<Breadcrumbs aria-label="breadcrumb">
+				{this.processCrumbs(this.state.pathlist)}
+			</Breadcrumbs>
+		)
 	}
 }
 
