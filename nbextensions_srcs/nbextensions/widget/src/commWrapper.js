@@ -1,30 +1,34 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Widget from './widget'
 
 let promise = import('base/js/namespace')
 
 const register = window.register 
 
-export const CommWrapper = () => {
-		promise.then(Jupyter=>{
-			Jupyter.notebook.kernel.comm_manager.register_target('widget_comm', function(comm, msg){
+export const CommWrapper = (target_name, component) => {
+				promise.then(Jupyter=>{
+			Jupyter.notebook.kernel.comm_manager.register_target(target_name, function(comm, msg){
+				const reactComponent = React.createElement(
+					component,
+					{comm: comm, state: msg.content.data.state, children: msg.content.data.children},
+					null );
+
 				switch(msg.content.data.render){
 					case "cell":
-						render_in_cell(Jupyter, comm, msg); break;
+						render_in_cell(Jupyter, reactComponent, msg); break;
 					default:
-						return render_in_parent(comm, msg);
+						return render_in_parent(reactComponent, msg);
 				}
 			})
 		})
 	}
 
-const render_in_cell = (Jupyter, comm, msg) => {
+const render_in_cell = (Jupyter, reactComponent, msg) => {
 	const cell = Jupyter.notebook.get_msg_cell(msg.parent_header.msg_id)
 	if(cell.output_area.selector[0]){
 		const output = cell.output_area.selector[0].getElementsByClassName('output')[0] 
 		const subarea = create_subarea(output)
-        ReactDOM.render(<Widget comm={comm} state={msg.content.data.state} children={msg.content.data.children}/>, subarea)
+        ReactDOM.render(reactComponent, subarea)
 	}
 }
 
@@ -45,6 +49,6 @@ const create_subarea = (output) =>{
 	return subarea
 }
 
-const render_in_parent = (comm, msg) => {
-	register.widget = <Widget comm={comm} state={msg.content.data.state} children={msg.content.data.children}/>
+const render_in_parent = (reactComponent, msg) => {
+	register.widget = reactComponent
 }
