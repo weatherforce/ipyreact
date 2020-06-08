@@ -9,10 +9,8 @@ Welcome to ipyreactwidget's documentation!
 .. toctree::
    :maxdepth: 2
 
-   nbextension_trial
-   comms_trial
-   react_nbextension_trial
-   react_comm_trial.md
+   cookbook_series
+   custom-widget
 
    :caption: Contents:
 
