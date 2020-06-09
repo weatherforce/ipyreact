@@ -2,8 +2,8 @@ var path = require('path');
 
 module.exports = {
 	entry:{
-		widget: './nbextensions/widget/src/index.js',
-		register: './nbextensions/register/src/index.js',
+		breadcrumbs: './nbextensions/breadcrumbs/index.js',
+		register: './nbextensions/register/index.js',
 	},
     output: {
         filename: '[name]/index.js',
