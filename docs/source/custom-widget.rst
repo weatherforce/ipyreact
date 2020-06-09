@@ -6,7 +6,10 @@ If you are not satisfied with the current available widgets you have two options
 .. toctree::
    maxdepth: 2
    cookiecutter
+
+
+A second option is to fork ipyreacwidget, implement your widget based on Widget base class, make it work and ask for a pull request. Do know however that this option is reserved to generic and universal widgets only.  
+
+.. toctree::
+   maxdepth: 2
    make-a-widget
-
-
-the second option is to fork ipyreacwidget, implement your widget based on Widget base class, make it work and ask for a pull request. Do know however that this option is reserved to generic and universal widgets only.  
