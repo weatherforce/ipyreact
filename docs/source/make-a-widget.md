@@ -59,15 +59,69 @@ This is the minimum amount of code necessary to create a widget. What you can do
 ### build
 
 In nbextensions_srcs, edit `webpack.config.js` and add your widget as a new entry.
-then simply hit `yarn build` and you are good to go.
+then simply hit `yarn build`( if you want a production code, otherwise use `yarn dev` to develop and have access to errors), and you are good to go.
 
 ## make the python part
 
+Now that you have a minimal version that compiles in javascript, you want it to be print into your notebook. To do so, you need a python side that will
+"summon" the visual javascript side.
+
 ### setup
+
+Enter ipyreactwidgets package, then create your python module <your-widget>.py in it.
+
+```bash
+cd ipyreactwidgets
+touch <your-widget>.py
+```
 
 ### develop 
 
+Copy paste the following into <your-widget>.py, and modify accordingly <your-widget> values.
+
+```python
+from ipyreactwidgets import Widget
+
+
+class <YourWidget>(Widget):
+
+    def __init__(self):
+        super().__init__("<your-wigdet")
+```
+
+This is the minimal amount of code necessary to create the python side of a widget. 
+
 ### build
 
+First step, ease access to your widget: edit `ipyreactwidgets/__init__.py` file, and 
+append the following line, modifying <your-widget> accordingly.
+
+```python
+from .<your-widget> import <YourWidget> 
+```
+
+Second step, in ipyreactwidgets root folder, hit :
+
+```bash
+pip install .
+```
 
 ## Test it on a notebook
+
+Just run a notebook, import your widget from ipyreactwidgets, and instantiate it.
+
+```bash
+jupyter notebook TESTEME.ipynb
+```
+
+in a cell:
+
+```python
+from ipyreactwidgets import <YourWidget> 
+your_widget_instance = <YourWidget>()
+your_widget_instance
+```
+
+In this section you have seen the minimal amount of code to create a widget directly into ipyreactwidget.
+Please refer to [cookiecutter](cookiecutter.md) for more details on how python and javascript modules communicates.
+
