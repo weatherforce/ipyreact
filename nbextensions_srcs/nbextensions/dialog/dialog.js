@@ -13,25 +13,29 @@ class IDialog extends Widget {
 
 	constructor(props){
 		super(props);
-		this.state = {open: false}
 		this.handleClickOpen = this.handleClickOpen.bind(this)
 		this.handleClickClose = this.handleClickClose.bind(this)
 	}
 
 	handleClickOpen(event){
+		let data ={state: this.state} 
+		data.state.open = true
+		console.log(data)
 		this.setState({open:true})	
+        this.props.comm.send(data)
 	}
 
 	handleClickClose(event){
+		let data ={state: this.state} 
+		data.state.open = false 
+		console.log(data)
 		this.setState({open:false})	
+        this.props.comm.send(data)
 	}
 
 	render(){
 		return (
     <div>
-      <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
-        Open alert dialog
-      </Button>
       <Dialog
         open={this.state.open}
         onClose={this.handleClickClose}
