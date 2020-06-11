@@ -16,4 +16,4 @@ leave your opinion if known on how you would implement this feature/story.
 
 /label ~Todo
 /cc @ThomasPouvreau
-/assign @Alex-B
+/assign @alex.blaza 
