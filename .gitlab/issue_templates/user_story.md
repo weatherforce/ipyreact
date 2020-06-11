@@ -10,6 +10,10 @@ Put some details here.
 
 Put some more details here. 
 
+# Proposed solution
+
+leave your opinion if known on how you would implement this feature/story. 
+
 /label ~Todo
 /cc @ThomasPouvreau
 /assign @Alex-B
