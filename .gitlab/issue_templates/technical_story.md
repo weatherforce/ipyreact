@@ -1,12 +1,10 @@
-# User Story
-
-as A USER I want to  DO SOMETHING in order to ACHIEVE SOMETHING .
+# Technical Story
 
 # Background
 
 Put some details here. 
 
-# further explanation
+# Further explanation 
 
 Put some more details here. 
 
