@@ -31,7 +31,5 @@ class Widget:
         data = {"state": self.state, "props": self.props}
         self.communication.send(data)
 
-    def __repr__(self):
+    def _ipython_display_(self, **kwargs):
         self.setcommunication(render="cell")
-        return f"<Widget target_name={self.target_name} state={self.state}\
-            props={self.props}>"
