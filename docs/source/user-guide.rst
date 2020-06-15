@@ -11,8 +11,6 @@ to the jupyter world, in order to ease dashboard building process on a Jupyter N
 .. toctree::
    :maxdepth: 2
 
-    user-install
-    quickstart
-    widget-list
-  
-    
+   user-install
+   quickstart
+   widget-list

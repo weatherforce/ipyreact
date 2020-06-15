@@ -1,4 +1,4 @@
-# Install ipyreactwidgets
+# Install ipyreactwidgets
 
 It is recommended to use a virtual environment:
 
