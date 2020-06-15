@@ -9,8 +9,8 @@ Welcome to ipyreactwidget's documentation!
 .. toctree::
    :maxdepth: 2
 
-   cookbook_series
-   custom-widget
+   user-guide
+   developer-guide
 
    :caption: Contents:
 
