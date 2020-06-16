@@ -15,7 +15,7 @@ class widget extends React.Component{
 	processChildren(children){
 		if (children){
 			return children.map( (child) => {
-				return window.registry[child] ? window.registry[child] : "void"	
+				return window.widgetRegistry[child] ? window.widgetRegistry[child] : "void"	
 			})
 		}
 		return ["void"]

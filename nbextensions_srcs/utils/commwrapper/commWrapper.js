@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 
 let promise = import('base/js/namespace')
 
-const registry = window.registry 
+const registry = window.widgetRegistry 
 
 export const CommWrapper = (target_name, component) => {
 				promise.then(Jupyter=>{

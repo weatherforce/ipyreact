@@ -7,9 +7,9 @@ class WidgetRegistry{
 	}
 }
 
-export const registry = new WidgetRegistry();
+export const widgetRegistry = new WidgetRegistry();
 
-window.registry = registry;
+window.widgetRegistry = widgetRegistry;
 
 export const load_ipython_extension = () =>{
 	promise.then( Jupyter => {
