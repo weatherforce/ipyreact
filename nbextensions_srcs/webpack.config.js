@@ -3,7 +3,7 @@ var path = require('path');
 module.exports = {
 	entry:{
 		breadcrumbs: './nbextensions/breadcrumbs/index.js',
-		register: './nbextensions/register/index.js',
+		registry: './nbextensions/registry/index.js',
 	},
     output: {
         filename: '[name]/index.js',
