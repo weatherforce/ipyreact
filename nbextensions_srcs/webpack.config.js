@@ -3,6 +3,7 @@ var path = require('path');
 module.exports = {
 	entry:{
 		breadcrumbs: './nbextensions/breadcrumbs/index.js',
+		slider: './nbextensions/slider/index.js',
 		registry: './nbextensions/registry/index.js',
 	},
     output: {
@@ -22,4 +23,4 @@ module.exports = {
         ]
     },
     externals: ['base/js/namespace']
-}; 
+};
