@@ -1,18 +1,17 @@
 let promise = import("base/js/namespace")
 
-class WidgetRegister{
+class WidgetRegistry{
 
 	registerWidget(widgetname, widget){
 		this[widgetname] = widget	
 	}
 }
 
-export const register = new WidgetRegister();
+export const widgetRegistry = new WidgetRegistry();
 
-window.register = register;
+window.widgetRegistry = widgetRegistry;
 
 export const load_ipython_extension = () =>{
 	promise.then( Jupyter => {
-		console.log("This is the manager speaking: Go back to work")
 	})
 }

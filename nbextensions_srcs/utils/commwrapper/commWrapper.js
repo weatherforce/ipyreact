@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom'
 
 let promise = import('base/js/namespace')
 
-const register = window.register 
+const registry = window.widgetRegistry 
 
 export const CommWrapper = (target_name, component) => {
 				promise.then(Jupyter=>{
-			Jupyter.notebook.kernel.comm_manager.register_target(target_name, function(comm, msg){
+			Jupyter.notebook.kernel.comm_manager.registry_target(target_name, function(comm, msg){
 				const reactComponent = React.createElement(
 					component,
 					{comm: comm, state: msg.content.data.state, children: msg.content.data.children},
@@ -50,5 +50,5 @@ const create_subarea = (output) =>{
 }
 
 const render_in_parent = (reactComponent, msg) => {
-	register.widget = reactComponent
+	registry.widget = reactComponent
 }
