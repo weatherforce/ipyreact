@@ -7,7 +7,7 @@ const registry = window.widgetRegistry
 
 export const CommWrapper = (widgetName, component) => {
 				promise.then(Jupyter=>{
-			Jupyter.notebook.kernel.comm_manager.registry_target(`${widgetName}_comm`, function(comm, msg){
+			Jupyter.notebook.kernel.comm_manager.register_target(`${widgetName}_comm`, function(comm, msg){
 				const reactComponent = React.createElement(
 					component,
 					{comm: comm, state: msg.content.data.state, children: msg.content.data.children},
