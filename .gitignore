@@ -262,3 +262,11 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+
+###############
+# Built Files #
+###############
+
+nbextensions_dists/
+#############
+

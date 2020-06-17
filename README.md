@@ -8,6 +8,13 @@ nbextension that will allow to embed widgets into layouts one.
 
 ### On local
 
+#### Build java script
+cd nbextensions_srcs
+npm install
+npm run build
+
+
+#### Install Python Modules
 ```bash
 python3 -m virtualenv <your-env>
 source <your-env>/bin/activate
