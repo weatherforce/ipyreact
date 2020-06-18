@@ -7,25 +7,23 @@ import SliderReact from '@material-ui/core/Slider';
 import VolumeDown from '@material-ui/icons/VolumeDown';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 
-const styles = {
-  root: {
-    width: 300,
-  },
-  slider: {
-    padding: '22px 0px',
-  },
-};
-
 
 class Slider extends Widget {
 
+	constructor(props){
+		super(props)
+		this.handleChange = this.handleChange.bind(this)
+	}
+
+	handleChange(event, newValue){
+    	this.setState({"value": newValue});
+	}
 
   render() {
-    const { classes } = this.props;
-    const { value } = this.state;
+    let value = this.state.value;
 
     return (
-      <div className={classes.root}>
+      <div>
         <Typography id="continuous-slider" gutterBottom>
           Volume
         </Typography>
@@ -34,7 +32,7 @@ class Slider extends Widget {
             <VolumeDown />
           </Grid>
           <Grid item xs>
-            <SliderReact value={value} onChange={handleChange} aria-labelledby="continuous-slider" />
+            <SliderReact value={value} onChange={this.handleChange} aria-labelledby="continuous-slider" />
           </Grid>
           <Grid item>
             <VolumeUp />
