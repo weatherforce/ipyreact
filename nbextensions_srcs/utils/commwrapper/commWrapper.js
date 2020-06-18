@@ -5,9 +5,9 @@ let promise = import('base/js/namespace')
 
 const registry = window.widgetRegistry 
 
-export const CommWrapper = (target_name, component) => {
+export const CommWrapper = (widgetName, component) => {
 				promise.then(Jupyter=>{
-			Jupyter.notebook.kernel.comm_manager.registry_target(target_name, function(comm, msg){
+			Jupyter.notebook.kernel.comm_manager.register_target(`${widgetName}_comm`, function(comm, msg){
 				const reactComponent = React.createElement(
 					component,
 					{comm: comm, state: msg.content.data.state, children: msg.content.data.children},
@@ -17,7 +17,7 @@ export const CommWrapper = (target_name, component) => {
 					case "cell":
 						render_in_cell(Jupyter, reactComponent, msg); break;
 					default:
-						return render_in_parent(reactComponent, msg);
+						return render_in_parent(widgetName, reactComponent, msg);
 				}
 			})
 		})
@@ -49,6 +49,6 @@ const create_subarea = (output) =>{
 	return subarea
 }
 
-const render_in_parent = (reactComponent, msg) => {
-	registry.widget = reactComponent
+const render_in_parent = (widgetName, reactComponent, msg) => {
+	registry[widgetName] = reactComponent
 }

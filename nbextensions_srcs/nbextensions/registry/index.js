@@ -2,8 +2,8 @@ let promise = import("base/js/namespace")
 
 class WidgetRegistry{
 
-	registerWidget(widgetname, widget){
-		this[widgetname] = widget	
+	registerWidget(widgetName, widget){
+		this[widgetName] = widget	
 	}
 }
 
