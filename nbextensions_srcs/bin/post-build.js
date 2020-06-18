@@ -1,35 +1,33 @@
 #!/usr/bin/env node
 
-let fs = require('fs');
-let path = require('path');
+const fs = require('fs')
+const path = require('path')
 
 const getNbextensionList = (folderpath) => {
-	return fs.readdirSync(folderpath)		
-};
-
-const generateJson = (nbextension) => {
-	let extensionEnabling = {};
-	extensionEnabling[nbextension +'/index'] = true
-	return { "load_extensions": extensionEnabling }
+  return fs.readdirSync(folderpath)
 }
 
-const writeJson = (nbextension, generatedJson) => {
-	let targetfile = path.resolve(path.dirname('.'),
-		`../nbextensions_dists/${nbextension}`,
-		`${nbextension}.json`);
-	let data = JSON.stringify(generatedJson)
-	fs.writeFileSync(targetfile, data)
+const generateJson = (nbextension) => {
+  const extensionEnabling = {}
+  extensionEnabling[nbextension + '/index'] = true
+  return { load_extensions: extensionEnabling }
+}
+
+const writeJson = (nbextension, generatedJson) => {
+  const targetfile = path.resolve(path.dirname('.'),
+    `../nbextensions_dists/${nbextension}`,
+    `${nbextension}.json`
+  )
+  const data = JSON.stringify(generatedJson)
+  fs.writeFileSync(targetfile, data)
 }
 
 const writeAllJsons = (nbextensions) => {
-	nbextensions.forEach( nbextension =>{
-		let jsonfile = generateJson(nbextension)
-		writeJson(nbextension, jsonfile)
-	})
+  nbextensions.forEach(nbextension => {
+    const jsonfile = generateJson(nbextension)
+    writeJson(nbextension, jsonfile)
+  })
 }
 
-//grab provided args
-const [,, ...args] = process.argv
-
-let nbextensions = getNbextensionList("./nbextensions")
+const nbextensions = getNbextensionList('./nbextensions')
 writeAllJsons(nbextensions)
