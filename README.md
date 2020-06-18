@@ -1,4 +1,4 @@
-# IpyReactWidgets
+# ipyreactwidgets
 
 This is the final repository where the library should live. It aims to provide a variety of base widgets,
 that will be slowly integrated from cookiecutter created widgets. In addition, it will provide a Register
@@ -6,22 +6,24 @@ nbextension that will allow to embed widgets into layouts one.
 
 ## Installation 
 
-### On local
+### Build JavaScript
 
-#### Build java script
+```bash
 cd nbextensions_srcs
 npm install
 npm run build
+```
 
-
-#### Install Python Modules
+### Install Python Modules
 ```bash
 python3 -m virtualenv <your-env>
 source <your-env>/bin/activate
 pip install -r requirements.txt
 ```
 
-## Test
+## Tests
+
+TODO
 
 ## Documentation
 
