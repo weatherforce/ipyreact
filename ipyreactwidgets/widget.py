@@ -1,4 +1,5 @@
 from ipykernel.comm import Comm
+from .state import State
 
 
 class Widget:
@@ -6,7 +7,7 @@ class Widget:
     def __init__(self, name: str,  children=[]):
         self.widget_id = name
         self.target_name = f"{self.widget_id}_comm"
-        self.state = {}
+        self.state = State(self.send_updates)
         self.props = {}
         self.children = children
         self.setcommunication()
@@ -31,7 +32,5 @@ class Widget:
         data = {"state": self.state, "props": self.props}
         self.communication.send(data)
 
-    def __repr__(self):
+    def _ipython_display_(self, **kwargs):
         self.setcommunication(render="cell")
-        return f"<Widget target_name={self.target_name} state={self.state}\
-            props={self.props}>"

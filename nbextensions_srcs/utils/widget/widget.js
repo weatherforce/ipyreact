@@ -15,7 +15,7 @@ class widget extends React.Component{
 	processChildren(children){
 		if (children){
 			return children.map( (child) => {
-				return window.register[child] ? window.register[child] : "void"	
+				return window.widgetRegistry[child] ? window.widgetRegistry[child] : "void"	
 			})
 		}
 		return ["void"]
@@ -36,4 +36,4 @@ class widget extends React.Component{
 	}
 }
 
-export default widget 
+export default widget
