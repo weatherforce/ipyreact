@@ -270,3 +270,5 @@ dist
 nbextensions_dists/
 #############
 
+# Vim
+*.sw?
