@@ -122,6 +122,6 @@ your_widget_instance = <YourWidget>()
 your_widget_instance
 ```
 
-In this section you have seen the minimal amount of code to create a widget directly into ipyreactwidget.
+In this section you have seen the minimal amount of code to create a widget directly into ipyreactwidgets.
 Please refer to [cookiecutter](cookiecutter.md) for more details on how python and javascript modules communicates.
 
