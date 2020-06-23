@@ -36,4 +36,4 @@ class widget extends React.Component{
 	}
 }
 
-export default widget 
+export default widget

@@ -1,4 +1,5 @@
 import setuptools
+from ipyreactwidgets import __version__
 import os
 
 
@@ -18,7 +19,7 @@ with open("README.md", 'r') as fh:
 
 setuptools.setup(
     name="ipyreactwidgets",
-    version="0.0.1",
+    version=__version__,
     author="weatherforce",
     author_email="opensource@weatherforce.org",
     description="A widget library, based on React",
