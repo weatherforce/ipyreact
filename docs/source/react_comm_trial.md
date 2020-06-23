@@ -195,7 +195,7 @@ what we want to do here is to leverage pip capabilities to make sure that when w
 ```bash
 pip install appbar
 ``` 
-As we would with a custom widget from ipywidget template.
+As we would with a custom widget from ipywidgets template.
 
 On [jupyter notebook documentation](https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Distributing%20Jupyter%20Extensions%20as%20Python%20Packages.html) they are giving us an example on how you would do such a thing. 
 According to this documentation, we need a appbar.json into appbar folder, containing this:
@@ -355,7 +355,7 @@ Well well, in [this wonderful project](https://github.com/timbr-io/jupyter-react
 ...
 ```
 
-then we have a bunch of functions to clear the cell output, to set it etc... on ipywidget project, you will find something much more complexe but very similar in the idea, so for now, we will stick to the most simple solution and see its limitation. 
+then we have a bunch of functions to clear the cell output, to set it etc... on ipywidgets project, you will find something much more complexe but very similar in the idea, so for now, we will stick to the most simple solution and see its limitation. 
 but first, let's print this cell, and see if we can render the react just after :)
 
 So for it, I just printed the cell, and realized that there was an output_area inside. So I've sligthly changed index.js to that:

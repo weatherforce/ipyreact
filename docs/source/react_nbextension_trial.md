@@ -2,7 +2,7 @@
 
 ## Intro
 
-The goal here is to explore webpack ability to pass from JSX with ES6 way of handling import/export into an AMD "compliant" bundle. The idea behind is to find a way to make widgets using React on front end as an alternative of ipywidget library and its uses of Backbone framework. 
+The goal here is to explore webpack ability to pass from JSX with ES6 way of handling import/export into an AMD "compliant" bundle. The idea behind is to find a way to make widgets using React on front end as an alternative of ipywidgets library and its uses of Backbone framework. 
 
 ## setting up
 
