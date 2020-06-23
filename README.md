@@ -1,12 +1,19 @@
 # ipyreactwidgets
 
-This is the final repository where the library should live. It aims to provide a variety of base widgets,
-that will be slowly integrated from cookiecutter created widgets. In addition, it will provide a Register
-nbextension that will allow to embed widgets into layouts one.
+[Documentation](https://weatherforce-platform.gitlab.io/ipyreactwidgets/)
 
-## Installation 
+This is the final repository where the library should live. It aims to provide
+a variety of base widgets, that will be slowly integrated from cookiecutter
+created widgets. In addition, it will provide a Register nbextension that will
+allow to embed widgets into layouts one.
 
-### Build JavaScript
+## Installation
+
+TODO
+
+## Development installation 
+
+### Building JavaScript
 
 ```bash
 cd nbextensions_srcs
@@ -14,24 +21,26 @@ npm install
 npm run build
 ```
 
-### Install Python Modules
+### Installing Python packages
+
 ```bash
-python3 -m virtualenv <your-env>
+python3 -m venv <your-env>
 source <your-env>/bin/activate
-pip install -r requirements.txt
+python3 -m pip install -r dev_requirements.txt
+python3 -m pip install -e .
 ```
 
-## Tests
+## Running tests
 
 TODO
 
-## Documentation
+## Building documentation
 
-To create the documentation locally:
+To build the documentation locally:
+
 ```bash
 cd docs
 make html
 ```
-the html files created will be located in build/html.
 
-to have a look at existing documentation, check it out here, it is online [wiki page](https://weatherforce-platform.gitlab.io/ipyreactwidgets/).
+HTML files will be created in build/html.
