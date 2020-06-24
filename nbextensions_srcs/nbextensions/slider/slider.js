@@ -12,10 +12,6 @@ class Slider extends Widget {
 	}
 
 	handleChange(event, newValue){
-			let data ={"state": this.state}
-			data.value = newValue;
-			this.props.comm.send(data);
-			console.log(this.state, newValue);
 			this.setState({"value": newValue});
 	}
 
