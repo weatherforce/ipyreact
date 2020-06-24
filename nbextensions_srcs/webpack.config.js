@@ -4,7 +4,8 @@ module.exports = {
   entry: {
     breadcrumbs: './nbextensions/breadcrumbs/index.js',
     dialog: './nbextensions/dialog/index.js',
-    registry: './nbextensions/registry/index.js'
+    registry: './nbextensions/registry/index.js',
+		slider: './nbextensions/slider/index.js'
   },
   output: {
     filename: '[name]/index.js',
