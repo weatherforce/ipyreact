@@ -27,12 +27,12 @@ class Widget(HasTraits):
 
     def _received(self, msg):
         self.state = msg["content"]["data"]["state"]
-        self.send_updates()
 
     @observe('state')
     def state_change(self, change):
-        data = {"state": change['new'], "props": self.props}
-        self.communication.send(data)
+        if change['new'] != change['old']:
+            data = {"state": change['new'], "props": self.props}
+            self.communication.send(data)
 
     def send_updates(self):
         data = {"state": self.state, "props": self.props}
