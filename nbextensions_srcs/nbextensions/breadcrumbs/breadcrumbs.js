@@ -1,4 +1,3 @@
-import React from 'react'
 import Widget from '../../utils/widget/widget'
 import Typography from '@material-ui/core/Typography'
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'

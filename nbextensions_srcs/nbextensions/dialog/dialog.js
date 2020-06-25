@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
-class IDialog extends Widget {
+class IDialog extends Widget {
   constructor (props) {
     super(props)
     this.handleClickOpen = this.handleClickOpen.bind(this)

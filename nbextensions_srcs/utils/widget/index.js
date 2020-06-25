@@ -1,4 +1,3 @@
-import React from 'react'
 import Widget from './widget'
 import { CommWrapper } from '../commwrapper/commWrapper'
 
