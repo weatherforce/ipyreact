@@ -1,13 +1,14 @@
 from ipykernel.comm import Comm
-from .state import State
+from traitlets import HasTraits, Dict, observe
 
 
-class Widget:
+class Widget(HasTraits):
+
+    state = Dict(default_value={})
 
     def __init__(self, name: str,  children=[]):
         self.widget_id = name
         self.target_name = f"{self.widget_id}_comm"
-        self.state = State(self.send_updates)
         self.props = {}
         self.children = children
         self.setcommunication()
@@ -27,6 +28,11 @@ class Widget:
     def _received(self, msg):
         self.state = msg["content"]["data"]["state"]
         self.send_updates()
+
+    @observe('state')
+    def state_change(self, change):
+        data = {"state": change['new'], "props": self.props}
+        self.communication.send(data)
 
     def send_updates(self):
         data = {"state": self.state, "props": self.props}
