@@ -1,4 +1,3 @@
-import React from 'react'
 import { CommWrapper } from '../../utils/commwrapper/commWrapper'
 import BreadCrumbs from './breadcrumbs'
 

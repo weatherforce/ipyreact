@@ -1,9 +1,8 @@
-import React from 'react'
 import Widget from '../../utils/widget/widget'
 import Grid from '@material-ui/core/Grid'
 import SliderReact from '@material-ui/core/Slider'
 
-class Slider extends Widget {
+class Slider extends Widget {
   constructor (props) {
     super(props)
     this.handleChange = this.handleChange.bind(this)
