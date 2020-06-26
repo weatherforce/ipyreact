@@ -7,18 +7,20 @@ const registry = window.widgetRegistry
 
 export const CommWrapper = (widgetName, component) => {
   promise.then(Jupyter => {
-    Jupyter.notebook.kernel.comm_manager.register_target(`${widgetName}_comm`, function (comm, msg) {
-      const reactComponent = React.createElement(
-        component,
-        { comm: comm, state: msg.content.data.state, children: msg.content.data.children },
-        null)
+    Jupyter.notebook.events.on('kernel_ready.Kernel', function () {
+      Jupyter.notebook.kernel.comm_manager.register_target(`${widgetName}_comm`, function (comm, msg) {
+        const reactComponent = React.createElement(
+          component,
+          { comm: comm, state: msg.content.data.state, children: msg.content.data.children },
+          null)
 
-      switch (msg.content.data.render) {
-        case 'cell':
-          renderInCell(Jupyter, reactComponent, msg); break
-        default:
-          return renderInParent(widgetName, reactComponent, msg)
-      }
+        switch (msg.content.data.render) {
+          case 'cell':
+            renderInCell(Jupyter, reactComponent, msg); break
+          default:
+            return renderInParent(widgetName, reactComponent, msg)
+        }
+      })
     })
   })
 }
