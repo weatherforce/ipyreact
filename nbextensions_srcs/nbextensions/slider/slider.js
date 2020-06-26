@@ -11,6 +11,7 @@ class Slider extends Widget {
 
   handleChange (event, newValue) {
     this.setState({ value: newValue })
+	this.sendUpdates()
   }
 
   render () {

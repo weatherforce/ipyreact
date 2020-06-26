@@ -26,7 +26,8 @@ class Widget(HasTraits):
         self.communication.on_msg(self._received)
 
     def _received(self, msg):
-        self.state = msg["content"]["data"]["state"]
+        if self.state != msg['content']['data']['state']:
+            self.state = msg["content"]["data"]["state"]
 
     @observe('state')
     def state_change(self, change):
