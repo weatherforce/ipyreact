@@ -5,26 +5,6 @@ const jupyterPromise = import('base/js/namespace')
 
 const registry = window.IpyReactWidgetRegistry
 
-export const CommWrapper = (widgetName, component) => {
-  jupyterPromise.then(Jupyter => {
-    Jupyter.notebook.events.on('kernel_ready.Kernel', function () {
-      Jupyter.notebook.kernel.comm_manager.register_target(`${widgetName}_comm`, function (comm, msg) {
-        const reactComponent = React.createElement(
-          component,
-          { comm: comm, state: msg.content.data.state, children: msg.content.data.children },
-          null)
-
-        switch (msg.content.data.render) {
-          case 'cell':
-            renderInCell(Jupyter, reactComponent, msg); break
-          default:
-            return renderInParent(widgetName, reactComponent, msg)
-        }
-      })
-    })
-  })
-}
-
 const renderInCell = (Jupyter, reactComponent, msg) => {
   const cell = Jupyter.notebook.get_msg_cell(msg.parent_header.msg_id)
   if (cell.output_area.selector[0]) {
@@ -53,4 +33,27 @@ const createSubarea = (output) => {
 
 const renderInParent = (widgetName, reactComponent, msg) => {
   registry[widgetName] = reactComponent
+}
+
+const createCommCallback = (comm, msg) => {
+        const reactComponent = React.createElement(
+          component,
+          { comm: comm, state: msg.content.data.state, children: msg.content.data.children },
+          null)
+        switch (msg.content.data.render) {
+          case 'cell':
+            renderInCell(Jupyter, reactComponent, msg); break
+          default:
+            return renderInParent(widgetName, reactComponent, msg)
+       }
+}
+
+const registerTargetCallback = () => {
+	Jupyter.notebook.kernel.comm_manager.register_target(`${widgetName}_comm`, createCommCallback) 
+}
+
+export const CommWrapper = (widgetName, component) => {
+  jupyterPromise.then(Jupyter => {
+    Jupyter.notebook.events.on('kernel_ready.Kernel', registerTargetCallback)
+  })
 }
