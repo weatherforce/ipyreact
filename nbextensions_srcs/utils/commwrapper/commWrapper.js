@@ -1,12 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const promise = import('base/js/namespace')
+const jupyterPromise = import('base/js/namespace')
 
 const registry = window.IpyReactWidgetRegistry
 
 export const CommWrapper = (widgetName, component) => {
-  promise.then(Jupyter => {
+  jupyterPromise.then(Jupyter => {
     Jupyter.notebook.events.on('kernel_ready.Kernel', function () {
       Jupyter.notebook.kernel.comm_manager.register_target(`${widgetName}_comm`, function (comm, msg) {
         const reactComponent = React.createElement(
