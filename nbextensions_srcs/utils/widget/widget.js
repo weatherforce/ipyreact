@@ -28,7 +28,7 @@ class widget extends React.Component {
   processChildren (children) {
     if (children) {
       return children.map((child) => {
-        return window.widgetRegistry[child] ? window.widgetRegistry[child] : 'void'
+        return window.IpyReactWidgetRegistry[child] ? window.IpyReactWidgetRegistry[child] : 'void'
       })
     }
     return ['void']

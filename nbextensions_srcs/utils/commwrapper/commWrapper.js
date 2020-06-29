@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 
 const promise = import('base/js/namespace')
 
-const registry = window.widgetRegistry
+const registry = window.IpyReactWidgetRegistry
 
 export const CommWrapper = (widgetName, component) => {
   promise.then(Jupyter => {
