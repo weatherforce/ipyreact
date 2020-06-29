@@ -6,21 +6,21 @@ class widget extends React.Component {
     this.state = props.state
     this.processChildren = this.processChildren.bind(this)
 	this.handleMsg = this.handleMsg.bind(this)
-	this.sendUpdates = this.sendUpdates.bind(this)
+//	this.sendUpdates = this.sendUpdates.bind(this)
     this.children = this.processChildren(props.children)
 	props.comm.on_msg(this.handleMsg)
   }
-/*
+
   componentDidUpdate () {
     const data = { state: this.state }
     this.props.comm.send(data)
   }
-*/
+/*
   sendUpdates(){
     const data = { state: this.state }
 	this.props.comm.send(data)
   }
-
+*/
   handleMsg( msg ){
 	const state = msg.content.data.state
 	console.log(this.state)
