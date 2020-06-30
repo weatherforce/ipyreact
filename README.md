@@ -20,8 +20,7 @@ This guide assumes that you are using a linux based system.
 This builds the react javascript.
 
 ```bash
-npm install -C nbextensions_srcs
-npm run dev -C nbextensions_srcs
+npm install -C nbextensions_srcs && npm run dev -C nbextensions_srcs
 ```
 You should now have a nbextensions_dists folder
 
@@ -30,24 +29,18 @@ For installing the python packages an we recommend using a virtual environment
 ```bash
 python3 -m venv ipyreactvenv
 source ipyreactvenv/bin/activate
-python3 -m pip install -r dev_requirements.txt
-python3 -m pip install -e .
+pip install -r dev_requirements.txt
+pip install .
 ```
 
 ## Running Jupyter notebook
 In the same terminal as your virtual environment run:
 
 ```bash
-jupyter notebook
-```
-
-## Examples
-In the examples folders there is a ipynb for each widget. Have a go at running them.
-For example:
-```bash
 jupyter notebook examples/slider.ipynb
 ```
 
+There are other example ipynb which can be found in the examples folder
 ## Building documentation
 
 To build the documentation locally:
