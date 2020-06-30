@@ -474,32 +474,11 @@ def received(msg):
 Click and the counter should get incremented.  You may also evaluate `data` in
 a cell, click on the button and print again.
 
-## Removing the quick and dirty and making things properly
+## Creating a proper output area
 
-Right above, We have fixed a small margin issue in a wrong way `{{marginLeft: "150px"}}`... NO! 
-Sorry, it was a bit loud.. anyway, the idea here is to try to fit the jupyter output. 
-Long story made short, I followed the idea of our dear [Chelm](https://github.com/timbr-io/jupyter-react-js/blob/master/src/output.js)
-
-```javascript
-...
-    const area = document.createElement( 'div' );
-    area.classList.add( 'jupyter-react-area' );
-    area.classList.add( 'widget-area' );
-    this.area = area;
-
-    const _prompt = document.createElement( 'div' );
-    _prompt.classList.add( 'prompt' );
-    area.appendChild( _prompt );
-
-    const subarea = document.createElement( 'div' );
-    subarea.classList.add( 'jupyter-react-subarea' );
-    subarea.classList.add( 'widget-subarea' );
-    area.appendChild( subarea );
-...
-```
-
-except that instead of making our own css classes, I re-used the jupyter ones. 
-It becomes then: 
+Above we've explicitely set a margin with `{{marginLeft: "150px"}}` in order to
+fit the jupyter output area. Let's now properly create all the elements that
+make an output area:
 
 ```javascript
 import React from 'react'
@@ -508,20 +487,20 @@ import App from './App'
 let promise = import('base/js/namespace')
 
 const create_subarea = (output) =>{
-	const area = document.createElement('div')
-	area.classList.add('output_area')
-	output.appendChild(area)
-
-	const prompt = document.createElement('div')
-	prompt.classList.add('prompt')
-	prompt.classList.add('prompt_output')
-	area.appendChild(prompt)
-
-
-	const subarea = document.createElement('div')
-	subarea.classList.add('output_subarea')
-	area.appendChild(subarea)
-	return subarea
+    const area = document.createElement('div')
+    area.classList.add('output_area')
+    output.appendChild(area)
+    
+    const prompt = document.createElement('div')
+    prompt.classList.add('prompt')
+    prompt.classList.add('prompt_output')
+    area.appendChild(prompt)
+    
+    
+    const subarea = document.createElement('div')
+    subarea.classList.add('output_subarea')
+    area.appendChild(subarea)
+    return subarea
 }
 
 export const load_ipython_extension = () =>{
@@ -533,8 +512,8 @@ export const load_ipython_extension = () =>{
             const msg_id = msg.parent_header.msg_id
             const cell = Jupyter.notebook.get_msg_cell( msg_id );
             if(cell.output_area.selector[0]){
-				const output = cell.output_area.selector[0].getElementsByClassName('output')[0] 
-				const subarea = create_subarea(output)
+                const output = cell.output_area.selector[0].getElementsByClassName('output')[0] 
+                const subarea = create_subarea(output)
                 ReactDOM.render(<App comm={comm} data={msg.content.data}/>, subarea)
             }
         })
@@ -542,23 +521,21 @@ export const load_ipython_extension = () =>{
 }
 ```
 
-and boom ! clean way to print the widget :D
+Now the widget is displayed in a proper output area.
 
 
-## Appbar at last !
+## Appbar at last!
 
-Now, lets import material ui Appbar into our project
+Now, let's import Material-UI Appbar into our project.
 
-Material ui import : 
+Material-UI import: 
 
 ```bash
 cd appbar/appbarjs
 yarn add @material-ui/core @material-ui/icons typeface-roboto
 ```
 
-> note: put import 'typeface-roboto' into index.js
-
-then modify the App.js file like this:
+Insert `import "typeface-roboto"` into index.js and modify `App.js` like this:
 
 ```javascript
 import React from 'react'
@@ -604,72 +581,71 @@ function ButtonAppBar() {
 }
 
 class App extends React.Component{
-
-	constructor(props){
-		super(props)
-		this.state = {data: props.data}
-
-		this.handleMsg = this.handleMsg.bind(this)
-		this.handleClick = this.handleClick.bind(this)
-
-		props.comm.on_msg(this.handleMsg)
-	}
-
-	handleClick(e){
-		this.props.comm.send("click")
-	}
-
-	handleMsg( msg ){
-		const data = msg.content.data
-		this.setState({data: data})
-		console.log("hey ! we received a msg")
-	}
-
-	render(){
-		return(
-		<div style={{marginLeft: "150px"}} >
-			<ButtonAppBar/>
-			<h1> Hello {this.state.data.title}! </h1>
-			<button onClick={ this.handleClick }> count +1 </button>
-			<h3> count: {this.state.data.count} </h3>
-		</div>
-		)}
+    
+    constructor(props){
+        super(props)
+        this.state = {data: props.data}
+        
+        this.handleMsg = this.handleMsg.bind(this)
+        this.handleClick = this.handleClick.bind(this)
+        
+        props.comm.on_msg(this.handleMsg)
+    }
+    
+    handleClick(e){
+        this.props.comm.send("click")
+    }
+    
+    handleMsg( msg ){
+        const data = msg.content.data
+        this.setState({data: data})
+        console.log("hey ! we received a msg")
+    }
+    
+    render(){
+        return(
+        <div>
+          <ButtonAppBar/>
+          <h1> Hello {this.state.data.title}! </h1>
+          <button onClick={ this.handleClick }> count +1 </button>
+          <h3> count: {this.state.data.count} </h3>
+        </div>
+        )
+    }
 }
 
 export default App
 ```
 
-At this point , it won't compile since it needs a css-loader: 
+At this point it won't compile since it needs a CSS loader:
 
 ```bash
 yarn add style-loader css-loader file-loader --dev
 ```
 
-then in webpack.config.js add these rules :
+Then in webpack.config.js add these rules:
 
 ```javascript
-...
- 		{
-        	test: /\.css$/i,
-        	use: ['style-loader', 'css-loader'],
-      	},
-		{
-       	test: /\.(woff|woff2|eot|ttf|otf)$/,
-       	use: [
-          		'file-loader',
-         ],
-       },
-...
+// ...
+    {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+    },
+    {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: [
+            'file-loader',
+        ],
+    },
+// ...
 ```
 
-thennnn....
-
+Then:
 
 ```bash
-yarn build && cd .. && pip install . && nbk test.ipynb
+yarn build && cd .. && pip install . && jupyter notebook test.ipynb
 ```
 
-you have a nice appbar printed on you notebook :)
+You should now have a nice appbar printed on you notebook.
 
-A final work would be to instantiate it and set events on it for a nice render
-
+A further step would be to instantiate it and set events on it for nice rendering.
