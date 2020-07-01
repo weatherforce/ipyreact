@@ -67,7 +67,7 @@ There you go ! the interesting parts begins  now !
 
 ## Fourth step: code
 
-An IpyReactWidget is a compound of a python Widget's child class, and a notebook extension (which is a javascript piece of code, interacting with jupyter) using React library.
+An ipyreactwidget is a compound of a python Widget's child class, and a notebook extension (which is a javascript piece of code, interacting with jupyter) using React library.
 To have a communication between those two, Jupyter provides the comm package, which is a communication bridge between front end and back end. Find below a schema to ease comprehension.
 
 ![diagram showing a global picture of a widget's parts communicate with each other][diagram1]

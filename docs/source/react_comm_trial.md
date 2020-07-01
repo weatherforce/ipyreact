@@ -89,14 +89,14 @@ So let's transform that to our needs, and write in the `appbarpy/__init__.py`:
 ```python
 
 def _jupyter_nbextension_paths():
-	return [
-			{
-				"section": "notebook",
-				"src": "static",
-				"dest": "appbar",
-				"require": "appbar/main"
-			}
-	]
+    return [
+        {
+            "section": "notebook",
+            "src": "static",
+            "dest": "appbar",
+            "require": "appbar/main"
+        }
+    ]
 ```
 
 According to documentation, we can now install this nbextension from the python module using:
@@ -195,7 +195,7 @@ what we want to do here is to leverage pip capabilities to make sure that when w
 ```bash
 pip install appbar
 ``` 
-As we would with a custom widget from ipywidget template.
+As we would with a custom widget from ipywidgets template.
 
 On [jupyter notebook documentation](https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Distributing%20Jupyter%20Extensions%20as%20Python%20Packages.html) they are giving us an example on how you would do such a thing. 
 According to this documentation, we need a appbar.json into appbar folder, containing this:
@@ -264,13 +264,16 @@ Yay!
 
 ## Entering the Fun part
 
-Okay, so far we succeed in create a basic notebook extension, load it from our python package, and we also managed to automatise the install process. 
-What we need to do now is to initiate a communication with our Python package, receive it on the front end side, and react accordingly.
+Okay, so far we succeeded in creating a basic notebook extension, loading it from our python package and we also managed to automate the install process. 
+What we need to do now is to initiate a communication with our Python package, receive it on the front end side and react accordingly.
 
 ### Starting a communication from Kernel 
 
-Let's do as we did before, which is create a communication channel from kernel. for now, just add this in a your notebook. communication will be the object acting as a 'socket', which will
-allow you to communicate with the front end. for now we will stick with it, and later we will put it in a more sophisticated object. 
+Let's do as we did before, which is create a communication channel from kernel.
+for now, just add this in a your notebook. `communication` will be the object
+acting as a *socket*, which will allow you to communicate with the front end.
+For now we will stick with it and later we will put it in a more sophisticated
+object. 
 
 ```python
 from ipykernel.comm import Comm
@@ -286,18 +289,18 @@ def received(msg):
 
 ### Receiving a communication within our front end objects
 
-Okay so now is the tricky part: from [jupyter notebook documentation](https://jupyter-notebook.readthedocs.io/en/stable/comms.html#opening-a-comm-from-the-kernel) on how to open a comm from the kernel, we can see that we have to register a target using Jupyter object imported dynamically.For our component to be able to work with it, we have several solutions:
+Okay so now is the tricky part: from [jupyter notebook documentation](https://jupyter-notebook.readthedocs.io/en/stable/comms.html#opening-a-comm-from-the-kernel) on how to open a comm from the kernel, we can see that we have to register a target using Jupyter object imported dynamically. For our component to be able to work with it, we have several solutions:
 - one would be to put everything coming from the kernel into a Context, and then pass this context to the rest of the component subcomponent. 
 - another one would be to use React composition pattern, and pass received data to children through props. 
 - a third one would be to use a redux store, and it would be then very similar to how ipywidgets work. (store would took the model place)
 
-This is a fundamental question on how we would like to build our futur library: Knowing that there are several way to achieve the absolute same result, but with different level of complexity, which one should we choose? Should we even choose one? do we need to let developpers access to all these different ways of achieving it? if so why ? and why not? 
+This is a fundamental question on how we would like to build our future library: knowing that there are several ways to achieve the absolute same result, but with different levels of complexity, which one should we choose? Should we even choose one? Do we need to let developers access all these different ways of achieving it? If so why? And why not? 
  
-In this very example we will use the second option, for simplicity, but we keep in mind that there is at the very least, two other options to achieve it, and most likely several more .
+In this very example we will use the second option, for simplicity, but we keep in mind that there is at the very least, two other options to achieve it, and most likely several more.
 
 So, for simplicity, we will create a comm and data object and pass it as props to App component. 
 
-in appbar/appbarjs/src/index.js
+In `appbar/appbarjs/src/index.js`:
 
 ```javascript
 import React from 'react'
@@ -306,22 +309,22 @@ import App from './App'
 let promise = import('base/js/namespace')
 
 
-export const load_ipython_extension = () =>{
-	promise.then( Jupyter =>{
-		Jupyter.notebook.kernel.comm_manager.register_target('appbar_comm', function(comm, msg){
-			ReactDOM.render(<App comm={comm} data={msg.content.data}/>, document.getElementById('notebook'))
-		})
-	})
+export const load_ipython_extension = () => {
+    promise.then( Jupyter => {
+        Jupyter.notebook.kernel.comm_manager.register_target('appbar_comm', function(comm, msg){
+            ReactDOM.render(<App comm={comm} data={msg.content.data}/>, document.getElementById('notebook-container'))
+        })
+    })
 }
 ```
 
-and then, in appbar/appbarjs/src/App.js:
+and then, in `appbar/appbarjs/src/App.js`:
 
 ```javascript
 import React from 'react'
 
 const App = (props) => {
-	return <h1> Hello {props.data.title}! </h1>
+	return <h1> Hello, {props.data.title}! </h1>
 }
 
 export default App
@@ -344,7 +347,7 @@ But... we just destroyed the notebook... maybe, it is time to think about how to
 
 Well I knew you would agree, moving on !
 
-### printing our widget without destroying the notebook, ideally within the calling cell output
+### Cell output
 
 Well well, in [this wonderful project](https://github.com/timbr-io/jupyter-react-js/blob/master/src/output.js), we have a beginning of answer on how we could possibly do such a thing [index.js](https://github.com/timbr-io/jupyter-react-js/blob/master/src/index.js), and it is referred right here: 
 
@@ -355,7 +358,7 @@ Well well, in [this wonderful project](https://github.com/timbr-io/jupyter-react
 ...
 ```
 
-then we have a bunch of functions to clear the cell output, to set it etc... on ipywidget project, you will find something much more complexe but very similar in the idea, so for now, we will stick to the most simple solution and see its limitation. 
+then we have a bunch of functions to clear the cell output, to set it etc... on ipywidgets project, you will find something much more complex but very similar in the idea, so for now, we will stick to the most simple solution and see its limitation. 
 but first, let's print this cell, and see if we can render the react just after :)
 
 So for it, I just printed the cell, and realized that there was an output_area inside. So I've sligthly changed index.js to that:
@@ -367,77 +370,77 @@ import App from './App'
 let promise = import('base/js/namespace')
 
 
-export const load_ipython_extension = () =>{
+export const load_ipython_extension = () => {
 
-	promise.then( Jupyter =>{
-		
-		Jupyter.notebook.kernel.comm_manager.register_target('appbar_comm', function(comm, msg){
+   promise.then( Jupyter => {
+      
+      Jupyter.notebook.kernel.comm_manager.register_target('appbar_comm', function(comm, msg) {
 
-			const msg_id = msg.parent_header.msg_id
-			const cell = Jupyter.notebook.get_msg_cell( msg_id );
-			if(cell.output_area.selector[0]){
-				const output = cell.output_area.selector[0].getElementsByClassName('output')[0]
-				ReactDOM.render(<App comm={comm} data={msg.content.data}/>, output)
-			}
-		})
-	})
+         const msg_id = msg.parent_header.msg_id
+         const cell = Jupyter.notebook.get_msg_cell(msg_id);
+         if(cell.output_area.selector[0]) {
+            const output = cell.output_area.selector[0].getElementsByClassName('output')[0]
+            ReactDOM.render(<App comm={comm} data={msg.content.data}/>, output)
+         }
+      })
+   })
 }
 
  ```
 
-annnnd if you recompile, build and launch test.ipynb, you will see the code be applied right under the cell ! yey ! we did it ! now, we can try to have bidirectional communication :D 
-here we goooooo!(high pitch voice)
+If you recompile, build and run the notebook again, you will see text get inserted right under the cell.
 
 ## Bi-directional communication
 
 So far, we managed to :
 - create a nbextension using JSX and React
 - instantiate it from kernel leveraging Jupyter's communication system
-- automatise the install from python package using setup.py and some Jupyter's config files
+- automate the install from python package using setup.py and some Jupyter's config files
 - made sure that the widget print itself right under the notebook's calling cell
 
 Now, we want to : 
 - make sure that we can communicate back to kernel from widget
 - update the widget from kernel 
 
-to make that happen, we will make a simple widget printing the number of click on a button.
+To make that happen, we will make a simple widget printing the number of click on a button.
 
-let's change app.js to :
+Let's change app.js to :
 
 ```javascript 
 import React from 'react'
 
 
-class App extends React.Component{
+class App extends React.Component {
 
-	constructor(props){
-		super(props)
-		this.state = {data: props.data}
-
-		this.handleMsg = this.handleMsg.bind(this)
-		this.handleClick = this.handleClick.bind(this)
-
-		props.comm.on_msg(this.handleMsg)
-	}
-
-	handleClick(e){
-		this.props.comm.send("click")
-	}
-
-	handleMsg( msg ){
-		const data = msg.content.data
-		this.setState({data: data})
-		console.log("hey ! we received a msg")
-	}
-
-	render(){
-		return(
-		<div style={{marginLeft: "150px"}} >
-			<h1> Hello {this.state.data.title}! </h1>
-			<button onClick={ this.handleClick }> count +1 </button>
-			<h3> count: {this.state.data.count} </h3>
-		</div>
-		)}
+  constructor(props) {
+     super(props)
+     this.state = {data: props.data}
+  
+     this.handleMsg = this.handleMsg.bind(this)
+     this.handleClick = this.handleClick.bind(this)
+  
+     props.comm.on_msg(this.handleMsg)
+  }
+  
+  handleClick(e) {
+     this.props.comm.send("click")
+  }
+  
+  handleMsg(msg) {
+     const data = msg.content.data
+     this.setState({data: data})
+     console.log("hey ! we received a msg")
+  }
+  
+  render() {
+     return(
+       <div style={{marginLeft: "150px"}} >
+         <h1> Hello {this.state.data.title}! </h1>
+         <button onClick={ this.handleClick }> count +1 </button>
+         <h3> count: {this.state.data.count} </h3>
+       </div>
+     )
+  }
 }
 
 export default App
@@ -456,7 +459,7 @@ from ipykernel.comm import Comm
 data = {
     "title": "this is the title",
     "count": 0
-    }
+}
 communication = Comm(target_name="appbar_comm",
                      data=data)
 
@@ -467,35 +470,15 @@ def received(msg):
     communication.send(data)
 
 ```
-go head click and boom ! bidirectional communication !!!! 
-to make sure, just print data inside the next cell and click on button then re print :)
 
-## Removing the quick and dirty and making things properly
+Click and the counter should get incremented.  You may also evaluate `data` in
+a cell, click on the button and print again.
 
-Right above, We have fixed a small margin issue in a wrong way `{{marginLeft: "150px"}}`... NO! 
-Sorry, it was a bit loud.. anyway, the idea here is to try to fit the jupyter output. 
-Long story made short, I followed the idea of our dear [Chelm](https://github.com/timbr-io/jupyter-react-js/blob/master/src/output.js)
+## Creating a proper output area
 
-```javascript
-...
-    const area = document.createElement( 'div' );
-    area.classList.add( 'jupyter-react-area' );
-    area.classList.add( 'widget-area' );
-    this.area = area;
-
-    const _prompt = document.createElement( 'div' );
-    _prompt.classList.add( 'prompt' );
-    area.appendChild( _prompt );
-
-    const subarea = document.createElement( 'div' );
-    subarea.classList.add( 'jupyter-react-subarea' );
-    subarea.classList.add( 'widget-subarea' );
-    area.appendChild( subarea );
-...
-```
-
-except that instead of making our own css classes, I re-used the jupyter ones. 
-It becomes then: 
+Above we've explicitely set a margin with `{{marginLeft: "150px"}}` in order to
+fit the jupyter output area. Let's now properly create all the elements that
+make an output area:
 
 ```javascript
 import React from 'react'
@@ -504,20 +487,20 @@ import App from './App'
 let promise = import('base/js/namespace')
 
 const create_subarea = (output) =>{
-	const area = document.createElement('div')
-	area.classList.add('output_area')
-	output.appendChild(area)
-
-	const prompt = document.createElement('div')
-	prompt.classList.add('prompt')
-	prompt.classList.add('prompt_output')
-	area.appendChild(prompt)
-
-
-	const subarea = document.createElement('div')
-	subarea.classList.add('output_subarea')
-	area.appendChild(subarea)
-	return subarea
+    const area = document.createElement('div')
+    area.classList.add('output_area')
+    output.appendChild(area)
+    
+    const prompt = document.createElement('div')
+    prompt.classList.add('prompt')
+    prompt.classList.add('prompt_output')
+    area.appendChild(prompt)
+    
+    
+    const subarea = document.createElement('div')
+    subarea.classList.add('output_subarea')
+    area.appendChild(subarea)
+    return subarea
 }
 
 export const load_ipython_extension = () =>{
@@ -529,8 +512,8 @@ export const load_ipython_extension = () =>{
             const msg_id = msg.parent_header.msg_id
             const cell = Jupyter.notebook.get_msg_cell( msg_id );
             if(cell.output_area.selector[0]){
-				const output = cell.output_area.selector[0].getElementsByClassName('output')[0] 
-				const subarea = create_subarea(output)
+                const output = cell.output_area.selector[0].getElementsByClassName('output')[0] 
+                const subarea = create_subarea(output)
                 ReactDOM.render(<App comm={comm} data={msg.content.data}/>, subarea)
             }
         })
@@ -538,23 +521,21 @@ export const load_ipython_extension = () =>{
 }
 ```
 
-and boom ! clean way to print the widget :D
+Now the widget is displayed in a proper output area.
 
 
-## Appbar at last !
+## Appbar at last!
 
-Now, lets import material ui Appbar into our project
+Now, let's import Material-UI Appbar into our project.
 
-Material ui import : 
+Material-UI import: 
 
 ```bash
 cd appbar/appbarjs
 yarn add @material-ui/core @material-ui/icons typeface-roboto
 ```
 
-> note: put import 'typeface-roboto' into index.js
-
-then modify the App.js file like this:
+Insert `import "typeface-roboto"` into index.js and modify `App.js` like this:
 
 ```javascript
 import React from 'react'
@@ -600,72 +581,71 @@ function ButtonAppBar() {
 }
 
 class App extends React.Component{
-
-	constructor(props){
-		super(props)
-		this.state = {data: props.data}
-
-		this.handleMsg = this.handleMsg.bind(this)
-		this.handleClick = this.handleClick.bind(this)
-
-		props.comm.on_msg(this.handleMsg)
-	}
-
-	handleClick(e){
-		this.props.comm.send("click")
-	}
-
-	handleMsg( msg ){
-		const data = msg.content.data
-		this.setState({data: data})
-		console.log("hey ! we received a msg")
-	}
-
-	render(){
-		return(
-		<div style={{marginLeft: "150px"}} >
-			<ButtonAppBar/>
-			<h1> Hello {this.state.data.title}! </h1>
-			<button onClick={ this.handleClick }> count +1 </button>
-			<h3> count: {this.state.data.count} </h3>
-		</div>
-		)}
+    
+    constructor(props){
+        super(props)
+        this.state = {data: props.data}
+        
+        this.handleMsg = this.handleMsg.bind(this)
+        this.handleClick = this.handleClick.bind(this)
+        
+        props.comm.on_msg(this.handleMsg)
+    }
+    
+    handleClick(e){
+        this.props.comm.send("click")
+    }
+    
+    handleMsg( msg ){
+        const data = msg.content.data
+        this.setState({data: data})
+        console.log("hey ! we received a msg")
+    }
+    
+    render(){
+        return(
+        <div>
+          <ButtonAppBar/>
+          <h1> Hello {this.state.data.title}! </h1>
+          <button onClick={ this.handleClick }> count +1 </button>
+          <h3> count: {this.state.data.count} </h3>
+        </div>
+        )
+    }
 }
 
 export default App
 ```
 
-At this point , it won't compile since it needs a css-loader: 
+At this point it won't compile since it needs a CSS loader:
 
 ```bash
 yarn add style-loader css-loader file-loader --dev
 ```
 
-then in webpack.config.js add these rules :
+Then in webpack.config.js add these rules:
 
 ```javascript
-...
- 		{
-        	test: /\.css$/i,
-        	use: ['style-loader', 'css-loader'],
-      	},
-		{
-       	test: /\.(woff|woff2|eot|ttf|otf)$/,
-       	use: [
-          		'file-loader',
-         ],
-       },
-...
+// ...
+    {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+    },
+    {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: [
+            'file-loader',
+        ],
+    },
+// ...
 ```
 
-thennnn....
-
+Then:
 
 ```bash
-yarn build && cd .. && pip install . && nbk test.ipynb
+yarn build && cd .. && pip install . && jupyter notebook test.ipynb
 ```
 
-you have a nice appbar printed on you notebook :)
+You should now have a nice appbar printed on you notebook.
 
-A final work would be to instantiate it and set events on it for a nice render
-
+A further step would be to instantiate it and set events on it for nice rendering.

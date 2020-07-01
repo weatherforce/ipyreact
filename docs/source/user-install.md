@@ -3,7 +3,7 @@
 It is recommended to use a virtual environment:
 
 ```bash
-python3 -m virtualenv venv
+python3 -m venv venv
 source venv/bin/activate
 ```
 

@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'ipyreactwidget'
+project = 'ipyreactwidgets'
 copyright = '2020, weatherforce'
 author = 'weatherforce'
 
