@@ -1,12 +1,12 @@
-# Adding a widget to ipyreactwidgets
+# Adding a widget to ipyreact
 
 This section aims at helping developers to create new widgets within
-ipyreactwidgets.  Here you will find how to create both the frontend and
+ipyreact.  Here you will find how to create both the frontend and
 backend sides of a notebook extension.
 
 ## Creating the frontend part
 
-Notebook extensions source code lives in in `nbextensions_srcs/`. If you check it out, you will see that 
+Notebook extensions source code lives in in `nbextensions_srcs/`. If you check it out, you will see that
 all the configuration files and necessary scripts. This source code is then transpiled
 to production code which is stored in `nbextensions_dists/`.
 
@@ -81,19 +81,19 @@ rendering of the frontend part.
 
 ### Directory structure
 
-Enter the `ipyreactwidgets` Python package directory, then create a Python module named `hello.py`.
+Enter the `ipyreact` Python package directory, then create a Python module named `hello.py`.
 
 ```bash
-cd ipyreactwidgets
+cd ipyreact
 touch hello.py
 ```
 
-### develop 
+### develop
 
 Copy paste the following into `hello.py`:
 
 ```python
-from ipyreactwidgets import Widget
+from ipyreact import Widget
 
 
 class HelloWidget(Widget):
@@ -106,14 +106,14 @@ This is the minimum amount of code necessary to create the Python side of a
 widget.  The argument passed to init should be the same as the first argument
 you passed to `CommWrapper` in your JavaScript code.
 
-To make it easier to import your widget, edit `ipyreactwidgets/__init__.py` and
+To make it easier to import your widget, edit `ipyreact/__init__.py` and
 append the following line:
 
 ```python
 from .hello import HelloWidget
 ```
 
-To install it, from ipyreactwidgets root folder, run:
+To install it, from ipyreact root folder, run:
 
 ```bash
 pip install .
@@ -121,13 +121,13 @@ pip install .
 
 ## Testing it in a notebook
 
-Create a notebook, import your widget from ipyreactwidgets and instantiate it in a cell:
+Create a notebook, import your widget from ipyreact and instantiate it in a cell:
 
 ```python
-from ipyreactwidgets import HelloWidget
+from ipyreact import HelloWidget
 your_widget_instance = HelloWidget()
 your_widget_instance
 ```
 
 In this section you have seen the minimal amount of code to add a widget to
-ipyreactwidgets.
+ipyreact.

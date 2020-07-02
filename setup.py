@@ -1,5 +1,5 @@
 import setuptools
-from ipyreactwidgets import __version__
+from ipyreact import __version__
 import os
 
 
@@ -18,14 +18,14 @@ with open("README.md", 'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="ipyreactwidgets",
+    name="ipyreact",
     version=__version__,
     author="weatherforce",
     author_email="opensource@weatherforce.org",
     description="A widget library, based on React",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="git@gitlab.com:weatherforce-platform/ipyreactwidgets.git",
+    url="git@gitlab.com:weatherforce-platform/ipyreact.git",
     data_files=generate_data_files(),
     packages=setuptools.find_packages(),
     classifiers=[

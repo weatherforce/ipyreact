@@ -1,4 +1,4 @@
-from ipyreactwidgets import Widget
+from ipyreact import Widget
 
 
 class Dialog(Widget):
