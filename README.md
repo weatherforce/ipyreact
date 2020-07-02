@@ -1,6 +1,6 @@
 # ipyreactwidgets
 
-[Documentation](https://weatherforce-platform.gitlab.io/ipyreactwidgets/)
+[Documentation](https://weatherforce-platform.gitlab.io/ipyreact/)
 
 This is the final repository where the library should live. It aims to provide
 a variety of base widgets, that will be slowly integrated from cookiecutter
