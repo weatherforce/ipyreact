@@ -5,9 +5,9 @@ class widget extends React.Component {
     super(props)
     this.state = props.state
     this.processChildren = this.processChildren.bind(this)
-	this.handleMsg = this.handleMsg.bind(this)
+    this.handleMsg = this.handleMsg.bind(this)
     this.children = this.processChildren(props.children)
-	props.comm.on_msg(this.handleMsg)
+    props.comm.on_msg(this.handleMsg)
   }
 
   componentDidUpdate () {
@@ -15,20 +15,19 @@ class widget extends React.Component {
     this.props.comm.send(data)
   }
 
-  handleMsg( msg ){
-	const state = msg.content.data.state
-	console.log(this.state)
-	  if(this.state !== state){
-	  	console.log("new state")
-        this.setState(state)
+  handleMsg (msg) {
+    const state = msg.content.data.state
+    console.log(this.state)
+	  if (this.state !== state) {
+	  	console.log('new state')
+      this.setState(state)
 	  }
   }
-
 
   processChildren (children) {
     if (children) {
       return children.map((child) => {
-        return window.widgetRegistry[child] ? window.widgetRegistry[child] : 'void'
+        return window.IpyReactWidgetRegistry[child] ? window.IpyReactWidgetRegistry[child] : 'void'
       })
     }
     return ['void']
