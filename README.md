@@ -1,4 +1,4 @@
-# ipyreactwidgets
+# ipyreact
 
 [Documentation](https://weatherforce-platform.gitlab.io/ipyreact/)
 
