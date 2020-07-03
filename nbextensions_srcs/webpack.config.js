@@ -5,7 +5,8 @@ module.exports = {
     breadcrumbs: './nbextensions/breadcrumbs/index.js',
     dialog: './nbextensions/dialog/index.js',
     registry: './nbextensions/registry/index.js',
-    slider: './nbextensions/slider/index.js'
+    slider: './nbextensions/slider/index.js',
+	applayout: './nbextensions/applayout/index.js',
   },
   output: {
     filename: '[name]/index.js',
