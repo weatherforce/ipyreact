@@ -16,14 +16,10 @@ class Widget(HasTraits):
 
         self.set_communication()
 
-    def process_children(self):
-        return [a_child.widget_id for a_child in self.children]
-
     def set_communication(self, render="default"):
         data = {"state": self.state,
                 "props": self.props,
                 "render": render,
-                "children": self.process_children()
                 }
         self.communication = Comm(target_name=self.target_name, data=data)
         self.communication.on_msg(self._received)
