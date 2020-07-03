@@ -6,7 +6,7 @@ class Button extends Widget {
 	render(){
 		return(
 			<div>
-				<h1>Hello</h1>
+				<button>Hello</button>
 			</div>
 		)
 	}
