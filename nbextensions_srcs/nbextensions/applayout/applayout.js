@@ -12,11 +12,19 @@ import Widget from '../../utils/widget/widget'
  */
 class AppLayout extends Widget {
 
+	constructor(props){
+		super(props)
+	}
+
+	fetchWidget(widgetName){
+		return window.IpyReactWidgetRegistry[widgetName]
+	}
+
 	render(){
 		return(
 			<div>
 				<div>
-					<p>top widget</p>
+					{this.fetchWidget(this.props.topWidget)}	
 				</div>
 				<div>
 					<p>left widget</p>

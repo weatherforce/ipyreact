@@ -6,10 +6,14 @@ class Widget(HasTraits):
 
     state = Dict(default_value={})
 
-    def __init__(self, name: str,  children=[]):
+    def __init__(self, name: str, props=None,  children=[]):
         self.widget_id = name
         self.target_name = f"{self.widget_id}_comm"
-        self.props = {}
+        if not props:
+            self.props = {}
+        else:
+            self.props = props
+
         self.children = children
         self.set_communication()
 

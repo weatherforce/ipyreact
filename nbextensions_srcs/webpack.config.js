@@ -7,6 +7,7 @@ module.exports = {
     registry: './nbextensions/registry/index.js',
     slider: './nbextensions/slider/index.js',
 	applayout: './nbextensions/applayout/index.js',
+	button: './nbextensions/button/index.js',
   },
   output: {
     filename: '[name]/index.js',
