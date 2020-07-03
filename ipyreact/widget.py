@@ -6,7 +6,7 @@ class Widget(HasTraits):
 
     state = Dict(default_value={})
 
-    def __init__(self, name: str, props=None,  children=[]):
+    def __init__(self, name: str, props=None):
         self.widget_id = name
         self.target_name = f"{self.widget_id}_comm"
         if not props:
@@ -14,7 +14,6 @@ class Widget(HasTraits):
         else:
             self.props = props
 
-        self.children = children
         self.set_communication()
 
     def process_children(self):
