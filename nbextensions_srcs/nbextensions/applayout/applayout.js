@@ -10,6 +10,18 @@ import Widget from '../../utils/widget/widget'
  *===========
  * @extends {Widget}
  */
+
+const layoutStyle = {
+	root:{
+		display: "grid",
+		gridTemplateColumns: "auto auto",
+		gridTemplateRows: "100px auto",
+	},
+	top: {
+		gridColumn: "1 / 3",
+	}
+}
+
 class AppLayout extends Widget {
 
 	constructor(props){
@@ -22,8 +34,8 @@ class AppLayout extends Widget {
 
 	render(){
 		return(
-			<div>
-				<div>
+			<div style={layoutStyle.root}>
+				<div style={layoutStyle.top}>
 					{this.fetchWidget(this.props.topWidget)}	
 				</div>
 				<div>
