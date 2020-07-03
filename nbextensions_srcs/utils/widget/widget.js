@@ -4,9 +4,7 @@ class widget extends React.Component {
   constructor (props) {
     super(props)
     this.state = props.state
-    this.processChildren = this.processChildren.bind(this)
     this.handleMsg = this.handleMsg.bind(this)
-    this.children = this.processChildren(props.children)
     props.comm.on_msg(this.handleMsg)
   }
 
@@ -24,13 +22,8 @@ class widget extends React.Component {
 	  }
   }
 
-  processChildren (children) {
-    if (children) {
-      return children.map((child) => {
-        return window.IpyReactWidgetRegistry[child] ? window.IpyReactWidgetRegistry[child] : 'void'
-      })
-    }
-    return ['void']
+  fetchWidget(widgetName){
+    return window.IpyReactWidgetRegistry[widgetName]
   }
 
   render () {

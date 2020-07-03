@@ -1,16 +1,5 @@
 import Widget from '../../utils/widget/widget'
 
-
-/**
- * AppLayout.
- *===========
- *=   TOP   =
- *===========
- *= L  =  R =
- *===========
- * @extends {Widget}
- */
-
 const layoutStyle = {
 	root:{
 		display: "grid",
@@ -22,16 +11,16 @@ const layoutStyle = {
 	}
 }
 
+/**
+ * AppLayout.
+ *===========
+ *=   TOP   =
+ *===========
+ *= L  =  R =
+ *===========
+ * @extends {Widget}
+ */
 class AppLayout extends Widget {
-
-	constructor(props){
-		super(props)
-	}
-
-	fetchWidget(widgetName){
-		return window.IpyReactWidgetRegistry[widgetName]
-	}
-
 	render(){
 		return(
 			<div style={layoutStyle.root}>
