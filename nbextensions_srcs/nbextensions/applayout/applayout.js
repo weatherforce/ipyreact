@@ -27,10 +27,10 @@ class AppLayout extends Widget {
 					{this.fetchWidget(this.props.topWidget)}	
 				</div>
 				<div>
-					<p>left widget</p>
+					{this.fetchWidget(this.props.leftWidget)}	
 				</div>
 				<div>
-					<p>right widget</p>
+					{this.fetchWidget(this.props.rightWidget)}	
 				</div>
 			</div>
 		)
