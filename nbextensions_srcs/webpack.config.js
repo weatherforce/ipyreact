@@ -1,4 +1,6 @@
-var path = require('path')
+const path = require('path')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
 
 module.exports = {
   entry: {
@@ -10,10 +12,13 @@ module.exports = {
 	button: './nbextensions/button/index.js',
   },
   output: {
-    filename: '[name]/index.js',
+    filename: '[name][contenthash]/index.js',
     path: path.resolve(__dirname, '../nbextensions_dists/'),
     libraryTarget: 'amd'
   },
+ plugins: [
+	new CleanWebpackPlugin(),
+ ],
   module: {
     rules: [
       {

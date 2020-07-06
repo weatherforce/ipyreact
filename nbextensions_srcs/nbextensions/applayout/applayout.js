@@ -12,7 +12,8 @@ const layoutStyle = {
 }
 
 /**
- * AppLayout.
+ * AppLayout: aim to provide a basic grid for you to create 
+ * your app in it.
  *===========
  *=   TOP   =
  *===========
