@@ -41,21 +41,13 @@ const renderInParent = (widgetName, reactComponent, msg) => {
  *
  * @param {Selector} output
  */
-const createSubarea = (output) => {
-  const area = document.createElement('div')
-  area.classList.add('output_area')
-  output.appendChild(area)
-
-  const prompt = document.createElement('div')
-  prompt.classList.add('prompt')
-  prompt.classList.add('prompt_output')
-  area.appendChild(prompt)
-
-  const subarea = document.createElement('div')
-  subarea.classList.add('output_subarea')
-  subarea.classList.add('output_result')
-  area.appendChild(subarea)
-  return subarea
+const createSubarea = (output) =>{
+	const area = 
+		<div className="output_area">
+			<div className="prompt"></div>
+			<div className="output_subarea output_result"></div>
+		</div>
+	output.appendChild(area)
 }
 
 /**
