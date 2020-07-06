@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import SubArea from './subarea'
+import _ from 'lodash'
 
 /* this promise is a dynamic import of base/js/namespace available from jupyter */
 const jupyterPromise = import('base/js/namespace')
 
 /* refers to widget registry where you can have acess to instantiated component */
 const registry = window.IpyReactWidgetRegistry
-
 
 /**
  * renderInCell. Allow to render ReactComponent under a notebook cell
@@ -44,15 +44,14 @@ const renderInParent = (widgetName, reactComponent, msg) => {
  */
 const createCommCallback = (Jupyter, widgetName, component) => {
   const callback = (comm, msg) => {
-    const reactComponent = React.createElement(
-      component,
-      { comm: comm, state: msg.content.data.state, children: msg.content.data.children },
-      null)
+    const props = { comm: comm, state: msg.content.data.state }
+    _.extend(props, msg.content.data.props)
+    const reactComponent = React.createElement(component, props, null)
     switch (msg.content.data.render) {
       case 'cell':
         renderInCell(Jupyter, reactComponent, msg); break
       default:
-        return renderInParent(widgetName, reactComponent, msg)
+        renderInParent(widgetName, reactComponent, msg)
     }
   }
   return callback

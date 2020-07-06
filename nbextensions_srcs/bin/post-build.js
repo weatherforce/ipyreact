@@ -29,5 +29,5 @@ const writeAllJsons = (nbextensions) => {
   })
 }
 
-const nbextensions = getNbextensionList('./nbextensions')
+const nbextensions = getNbextensionList('../nbextensions_dists')
 writeAllJsons(nbextensions)

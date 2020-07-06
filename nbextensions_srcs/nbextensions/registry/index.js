@@ -8,7 +8,7 @@ class WidgetRegistry {
 
 export const widgetRegistry = new WidgetRegistry()
 
-window.widgetRegistry = widgetRegistry
+window.IpyReactWidgetRegistry = widgetRegistry
 
 export const load_ipython_extension = () => {
   promise.then(Jupyter => {

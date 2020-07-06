@@ -6,21 +6,20 @@ class Widget(HasTraits):
 
     state = Dict(default_value={})
 
-    def __init__(self, name: str,  children=[]):
+    def __init__(self, name: str, props=None):
         self.widget_id = name
         self.target_name = f"{self.widget_id}_comm"
-        self.props = {}
-        self.children = children
-        self.set_communication()
+        if not props:
+            self.props = {}
+        else:
+            self.props = props
 
-    def process_children(self):
-        return [a_child.widget_id for a_child in self.children]
+        self.set_communication()
 
     def set_communication(self, render="default"):
         data = {"state": self.state,
                 "props": self.props,
                 "render": render,
-                "children": self.process_children()
                 }
         self.communication = Comm(target_name=self.target_name, data=data)
         self.communication.on_msg(self._received)
