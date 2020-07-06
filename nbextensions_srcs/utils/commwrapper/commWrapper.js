@@ -9,7 +9,6 @@ const jupyterPromise = import('base/js/namespace')
 /* refers to widget registry where you can have acess to instantiated component */
 const registry = window.IpyReactWidgetRegistry
 
-
 /**
  * renderInCell. Allow to render ReactComponent under a notebook cell
  *
@@ -45,8 +44,8 @@ const renderInParent = (widgetName, reactComponent, msg) => {
  */
 const createCommCallback = (Jupyter, widgetName, component) => {
   const callback = (comm, msg) => {
-	let props = { comm: comm, state: msg.content.data.state }
-	_.extend(props, msg.content.data.props)
+    const props = { comm: comm, state: msg.content.data.state }
+    _.extend(props, msg.content.data.props)
     const reactComponent = React.createElement(component, props, null)
     switch (msg.content.data.render) {
       case 'cell':

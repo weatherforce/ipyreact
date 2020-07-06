@@ -16,13 +16,13 @@ class widget extends React.Component {
   handleMsg (msg) {
     const state = msg.content.data.state
     console.log(this.state)
-	  if (this.state !== state) {
-	  	console.log('new state')
+    if (this.state !== state) {
+      console.log('new state')
       this.setState(state)
-	  }
+    }
   }
 
-  fetchWidget(widgetName){
+  fetchWidget (widgetName) {
     return window.IpyReactWidgetRegistry[widgetName]
   }
 

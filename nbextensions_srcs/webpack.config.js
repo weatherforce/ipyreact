@@ -1,6 +1,5 @@
 const path = require('path')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -8,8 +7,8 @@ module.exports = {
     dialog: './nbextensions/dialog/index.js',
     registry: './nbextensions/registry/index.js',
     slider: './nbextensions/slider/index.js',
-	applayout: './nbextensions/applayout/index.js',
-	button: './nbextensions/button/index.js',
+    applayout: './nbextensions/applayout/index.js',
+    button: './nbextensions/button/index.js'
   },
   devtool: 'inline-source-map',
   output: {
@@ -17,9 +16,9 @@ module.exports = {
     path: path.resolve(__dirname, '../nbextensions_dists/'),
     libraryTarget: 'amd'
   },
- plugins: [
-	new CleanWebpackPlugin(),
- ],
+  plugins: [
+    new CleanWebpackPlugin()
+  ],
   module: {
     rules: [
       {
