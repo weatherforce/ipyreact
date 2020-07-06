@@ -11,6 +11,7 @@ module.exports = {
 	applayout: './nbextensions/applayout/index.js',
 	button: './nbextensions/button/index.js',
   },
+  devtool: 'inline-source-map',
   output: {
     filename: '[name][contenthash]/index.js',
     path: path.resolve(__dirname, '../nbextensions_dists/'),
