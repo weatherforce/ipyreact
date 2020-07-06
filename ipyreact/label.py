@@ -1,8 +1,9 @@
 from ipyreact import Widget
 
-
+# Example initialisation is 'Label("My new, nice label")'
+# See example ipynb in examples folder for running example
 class Label(Widget):
 
-    def __init__(self):
+    def __init__(self, content):
         super().__init__("label")
-        self.state = {"value": 0}
+        self.state["content"] = content
