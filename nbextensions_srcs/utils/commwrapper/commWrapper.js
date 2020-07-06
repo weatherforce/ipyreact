@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import SubArea from './subarea'
 
 /* this promise is a dynamic import of base/js/namespace available from jupyter */
 const jupyterPromise = import('base/js/namespace')
@@ -19,8 +20,7 @@ const renderInCell = (Jupyter, reactComponent, msg) => {
   const cell = Jupyter.notebook.get_msg_cell(msg.parent_header.msg_id)
   if (cell.output_area.selector[0]) {
     const output = cell.output_area.selector[0].getElementsByClassName('output')[0]
-    const subarea = createSubarea(output)
-    ReactDOM.render(reactComponent, subarea)
+    ReactDOM.render(<SubArea reactComponent={reactComponent}/>, output)
   }
 }
 
@@ -33,21 +33,6 @@ const renderInCell = (Jupyter, reactComponent, msg) => {
  */
 const renderInParent = (widgetName, reactComponent, msg) => {
   registry[widgetName] = reactComponent
-}
-
-/**
- * createSubarea create the node in the DOM where you will render
- * your component.
- *
- * @param {Selector} output
- */
-const createSubarea = (output) =>{
-	const area = 
-		<div className="output_area">
-			<div className="prompt"></div>
-			<div className="output_subarea output_result"></div>
-		</div>
-	output.appendChild(area)
 }
 
 /**
