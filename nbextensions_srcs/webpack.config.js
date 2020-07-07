@@ -7,6 +7,7 @@ module.exports = {
     slider: './nbextensions/slider/index.js',
     applayout: './nbextensions/applayout/index.js',
     button: './nbextensions/button/index.js',
+    inputfield: './nbextensions/inputfield/index.js',
     label: './nbextensions/label/index.js'
   },
   devtool: 'inline-source-map',
