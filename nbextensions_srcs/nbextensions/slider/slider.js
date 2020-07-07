@@ -1,25 +1,32 @@
 import Widget from '../../utils/widget/widget'
-import Grid from '@material-ui/core/Grid'
-import SliderReact from '@material-ui/core/Slider'
+
 
 class Slider extends Widget {
-  constructor (props) {
-    super(props)
-    this.handleChange = this.handleChange.bind(this)
+  constructor(props) {
+    super(props);
+    this.updateRange = this.updateRange.bind(this)
   }
 
-  handleChange (event, newValue) {
-    this.setState({ value: newValue })
+  updateRange(event) {
+    const rangeValue = event.target.value
+    this.setState({
+      value: parseInt(rangeValue)
+    })
   }
-
+ 
   render () {
-    const value = this.state.value
 
     return (
+
       <div>
-        <Grid item xs>
-          <SliderReact value={value} onChange={this.handleChange} aria-labelledby='continuous-slider' />
-        </Grid>
+        <input id="range" type="range"
+          value={this.value}
+          min="0"
+          max="20"
+          step="1"
+          onChange={this.updateRange}
+        />
+        <span id="output">{this.value}</span>
       </div>
     )
   }
