@@ -12,13 +12,11 @@ class InputField extends Widget{
 	}
 
 	handleChange(event){
-		const value = event.target.value
-		console.log("new value", value)
-		this.setState({"value": value})
+	  const value = event.target.value
+	  this.setState({"value": value})
 	}
 
 	handleFocus(event){
-		console.log("focus")
   		jupyterPromise.then(Jupyter => {
 			Jupyter.keyboard_manager.disable()
 		})
@@ -26,7 +24,6 @@ class InputField extends Widget{
 
 
 	handleBlur(event){
-		console.log("blur")
 		jupyterPromise.then(Jupyter => {
 			Jupyter.keyboard_manager.enable()
 		})
