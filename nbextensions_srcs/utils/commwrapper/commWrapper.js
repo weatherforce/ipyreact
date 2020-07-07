@@ -20,7 +20,7 @@ const renderInCell = (Jupyter, reactComponent, msg) => {
   const cell = Jupyter.notebook.get_msg_cell(msg.parent_header.msg_id)
   if (cell.output_area.selector[0]) {
     const output = cell.output_area.selector[0].getElementsByClassName('output')[0]
-    ReactDOM.render(<SubArea reactComponent={reactComponent}/>, output)
+    ReactDOM.render(<SubArea reactComponent={reactComponent} />, output)
   }
 }
 
