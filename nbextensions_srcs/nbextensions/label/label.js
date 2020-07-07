@@ -1,6 +1,4 @@
 import Widget from '../../utils/widget/widget'
-import Grid from '@material-ui/core/Grid'
-import SliderReact from '@material-ui/core/Slider'
 
 class Label extends Widget {
   constructor (props) {
@@ -9,9 +7,7 @@ class Label extends Widget {
 
   render () {
     return (
-      <div>
-        {this.state.content}
-      </div>
+      <label> {this.state.content} </label>
     )
   }
 }
