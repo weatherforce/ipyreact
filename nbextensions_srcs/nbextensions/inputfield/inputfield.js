@@ -8,6 +8,7 @@ class InputField extends Widget{
 
 	handleChange(event){
 		const value = event.target.value
+		console.log("new value", value)
 		this.setState({"value": value})
 	}
 
