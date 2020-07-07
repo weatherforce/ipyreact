@@ -3,8 +3,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
   entry: {
-    breadcrumbs: './nbextensions/breadcrumbs/index.js',
-    dialog: './nbextensions/dialog/index.js',
     registry: './nbextensions/registry/index.js',
     slider: './nbextensions/slider/index.js',
     applayout: './nbextensions/applayout/index.js',
