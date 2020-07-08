@@ -3,6 +3,7 @@ import React from 'react'
 class widget extends React.Component {
   constructor (props) {
     super(props)
+    this.pythonUpdate = false
     this.state = props.state
     this.handleMsg = this.handleMsg.bind(this)
     props.comm.on_msg(this.handleMsg)
@@ -10,10 +11,14 @@ class widget extends React.Component {
 
   componentDidUpdate () {
     const data = { state: this.state }
-    this.props.comm.send(data)
+    if (!this.pythonUpdate) {
+      this.props.comm.send(data)
+    }
+    this.pythonUpdate = false
   }
 
   handleMsg (msg) {
+    this.pythonUpdate = true
     const state = msg.content.data.state
     console.log(this.state)
     if (this.state !== state) {
