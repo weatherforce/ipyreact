@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adding a widget to ipyreact &#8212; ipyreact 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Use the Cookiecutter" href="cookiecutter.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="adding-a-widget-to-ipyreact">
+<h1>Adding a widget to ipyreact<a class="headerlink" href="#adding-a-widget-to-ipyreact" title="Permalink to this headline">¶</a></h1>
+<p>This section aims at helping developers to create new widgets within
+ipyreact.  Here you will find how to create both the frontend and
+backend sides of a notebook extension.</p>
+<div class="section" id="creating-the-frontend-part">
+<h2>Creating the frontend part<a class="headerlink" href="#creating-the-frontend-part" title="Permalink to this headline">¶</a></h2>
+<p>Notebook extensions source code lives in in <code class="docutils literal notranslate"><span class="pre">nbextensions_srcs/</span></code>. If you check it out, you will see that
+all the configuration files and necessary scripts. This source code is then transpiled
+to production code which is stored in <code class="docutils literal notranslate"><span class="pre">nbextensions_dists/</span></code>.</p>
+<div class="section" id="directory-structure">
+<h3>Directory structure<a class="headerlink" href="#directory-structure" title="Permalink to this headline">¶</a></h3>
+<p>You will need to create a some mandatory files in order to create your widget</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> nbextensions_srcs/nbextensions
+mkdir hello
+<span class="nb">cd</span> hello
+touch index.js hello.js
+</pre></div>
+</div>
+</div>
+<div class="section" id="minimal-code-example">
+<h3>Minimal code example<a class="headerlink" href="#minimal-code-example" title="Permalink to this headline">¶</a></h3>
+<p>Type the following lines in <code class="docutils literal notranslate"><span class="pre">index.js</span></code>:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span>
+<span class="kr">import</span> <span class="p">{</span><span class="nx">CommWrapper</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;../../utils/commwrapper/commWrapper&#39;</span>
+<span class="kr">import</span> <span class="nx">HelloWidget</span> <span class="nx">from</span> <span class="s1">&#39;./hello&#39;</span>
+
+<span class="kr">export</span> <span class="kr">const</span> <span class="nx">load_ipython_extension</span> <span class="o">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="nx">CommWrapper</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="nx">HelloWidget</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This is your entry point, a piece of code that will make your React component available to Jupyter.
+Let’s look at the React component which will live in <code class="docutils literal notranslate"><span class="pre">hello.js</span></code>:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span>import React from &#39;react&#39;
+import Widget from &#39;../../utils/widget/widget&#39;
+
+class HelloWidget extends Widget {
+  render() {
+    return &lt;h1&gt;Hello, World!&lt;/h1&gt;
+  }
+}
+
+export default HelloWidget
+</pre></div>
+</div>
+<p>This is the minimum amount of code necessary to create a widget. You may then customize this component as you would do with any other React component.</p>
+</div>
+<div class="section" id="building-your-extension">
+<h3>Building your extension<a class="headerlink" href="#building-your-extension" title="Permalink to this headline">¶</a></h3>
+<p>In <code class="docutils literal notranslate"><span class="pre">nbextensions_srcs</span></code>, edit <code class="docutils literal notranslate"><span class="pre">webpack.config.js</span></code> and add your widget as a new entry:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">)</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">entry</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">breadcrumbs</span><span class="o">:</span> <span class="s1">&#39;./nbextensions/breadcrumbs/index.js&#39;</span><span class="p">,</span>
+    <span class="nx">dialog</span><span class="o">:</span> <span class="s1">&#39;./nbextensions/dialog/index.js&#39;</span><span class="p">,</span>
+    <span class="c1">// ...</span>
+    <span class="nx">hello</span><span class="o">:</span> <span class="s1">&#39;./nbextensions/hello/index.js&#39;</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then run <code class="docutils literal notranslate"><span class="pre">yarn</span> <span class="pre">build</span></code> for a production build or <code class="docutils literal notranslate"><span class="pre">yarn</span> <span class="pre">dev</span></code> for a development build.</p>
+</div>
+</div>
+<div class="section" id="creating-the-backend-part">
+<h2>Creating the backend part<a class="headerlink" href="#creating-the-backend-part" title="Permalink to this headline">¶</a></h2>
+<p>Now that you have a minimal frontend that compiles to JavaScript, you want to
+invoke it in your notebook. To do so, you need Python code that will trigger
+rendering of the frontend part.</p>
+<div class="section" id="id1">
+<h3>Directory structure<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Enter the <code class="docutils literal notranslate"><span class="pre">ipyreact</span></code> Python package directory, then create a Python module named <code class="docutils literal notranslate"><span class="pre">hello.py</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ipyreact
+touch hello.py
+</pre></div>
+</div>
+</div>
+<div class="section" id="develop">
+<h3>develop<a class="headerlink" href="#develop" title="Permalink to this headline">¶</a></h3>
+<p>Copy paste the following into <code class="docutils literal notranslate"><span class="pre">hello.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ipyreact</span> <span class="kn">import</span> <span class="n">Widget</span>
+
+
+<span class="k">class</span> <span class="nc">HelloWidget</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This is the minimum amount of code necessary to create the Python side of a
+widget.  The argument passed to init should be the same as the first argument
+you passed to <code class="docutils literal notranslate"><span class="pre">CommWrapper</span></code> in your JavaScript code.</p>
+<p>To make it easier to import your widget, edit <code class="docutils literal notranslate"><span class="pre">ipyreact/__init__.py</span></code> and
+append the following line:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">.hello</span> <span class="kn">import</span> <span class="n">HelloWidget</span>
+</pre></div>
+</div>
+<p>To install it, from ipyreact root folder, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install .
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="testing-it-in-a-notebook">
+<h2>Testing it in a notebook<a class="headerlink" href="#testing-it-in-a-notebook" title="Permalink to this headline">¶</a></h2>
+<p>Create a notebook, import your widget from ipyreact and instantiate it in a cell:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ipyreact</span> <span class="kn">import</span> <span class="n">HelloWidget</span>
+<span class="n">your_widget_instance</span> <span class="o">=</span> <span class="n">HelloWidget</span><span class="p">()</span>
+<span class="n">your_widget_instance</span>
+</pre></div>
+</div>
+<p>In this section you have seen the minimal amount of code to add a widget to
+ipyreact.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ipyreact</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="developer-guide.html">Developer guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cookbook-series.html">Cookbooks series on how to build a widget for Jupyter from scratch</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="custom-widget.html">Create a Custom widget</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="developer-guide.html">Developer guide</a><ul>
+  <li><a href="custom-widget.html">Create a Custom widget</a><ul>
+      <li>Previous: <a href="cookiecutter.html" title="previous chapter">Use the Cookiecutter</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, weatherforce.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/make-a-widget.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

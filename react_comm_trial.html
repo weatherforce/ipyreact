@@ -1,0 +1,699 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jupyter + python + React using Comm &#8212; ipyreact 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Create a Custom widget" href="custom-widget.html" />
+    <link rel="prev" title="React Extension trial" href="react_nbextension_trial.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="jupyter-python-react-using-comm">
+<h1>Jupyter + python + React using Comm<a class="headerlink" href="#jupyter-python-react-using-comm" title="Permalink to this headline">¶</a></h1>
+<p>This is the most exciting step of our journey to master widget building process for Jupyter Notebook.
+In this cookbook you will find a way to open a communication between a python piece of code on your Notebook to a nbextension based on React.
+At the end, we will have a base project to create a widget on Jupyter using React, and Python. From that package, we should be able to create a first version of a boilerplate,
+easing the development of a new kind of ipywidget, based on React.</p>
+<div class="section" id="set-up">
+<h2>Set Up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
+<p>first things first, what should we implement? Personnally, I would love to bring to Jupyter Environment the nice and good looking <a class="reference external" href="https://material-ui.com/components/app-bar/#simple-app-bar">AppBar</a> from Material UI.  So, naturally, our project will be called Appbar.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir appbar
+<span class="nb">cd</span> appbar
+</pre></div>
+</div>
+<div class="section" id="python-module-part">
+<h3>Python Module part<a class="headerlink" href="#python-module-part" title="Permalink to this headline">¶</a></h3>
+<p>This is probably the most simple part:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir appbarpy
+<span class="nb">cd</span> appbarpy
+touch __init__.py main.py
+mkdir static
+</pre></div>
+</div>
+</div>
+<div class="section" id="js-part">
+<h3>JS part<a class="headerlink" href="#js-part" title="Permalink to this headline">¶</a></h3>
+<p>As usual, lets create a basic setup for javascript:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ..
+mkdir appbarjs
+<span class="nb">cd</span> appbarjs
+yarn init 
+touch index.js
+</pre></div>
+</div>
+<p>From there, we should follow the instruction from <a class="reference internal" href="react_nbextension_trial.html"><span class="doc">react_nbextension_trial</span></a>, and replace the names and paths accordingly to our configuration.</p>
+<blockquote>
+<div><p>Note:Have in mind that the final goal is to put the webpack output files into the static folder of appbarpy, so consider dist folder is appbarpy/static.</p>
+</div></blockquote>
+<p>at the end of this section, your project’s structure should look like the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tree -I node_modules appbar/
+appbar/
+├── appbarjs
+│   ├── package.json
+│   ├── src
+│   │   ├── App.js
+│   │   └── index.js
+│   ├── webpack.config.js
+│   └── yarn.lock
+└── appbarpy
+    ├── __init__.py
+    ├── main.py
+    └── static
+        └── main.js
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="nbextension-install-from-python">
+<h2>Nbextension install from Python<a class="headerlink" href="#nbextension-install-from-python" title="Permalink to this headline">¶</a></h2>
+<p>Hehe, so here begin our new journey to a React Comm implementation. If you already have used <a class="reference external" href="https://ipywidgets.readthedocs.io/en/stable/">ipywidgets</a> at least once,
+you might have noticed that to install a nbextension, you just have to run a setup.py file and enable it ! Whoaw mind blowing right?</p>
+<p>Let’s try to do the same here, cause it’s quiet convenient. starting at the beginning, we should first read the documentation provided :  <a class="reference external" href="https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Distributing%20Jupyter%20Extensions%20as%20Python%20Packages.html#Distributing-Jupyter-Extensions-as-Python-Packages">jupyter notebook documenation</a></p>
+<p>After reading it, you would have realize that what we want to accomplish here is described <a class="reference external" href="https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Distributing%20Jupyter%20Extensions%20as%20Python%20Packages.html#Example---Server-extension-and-nbextension">here</a>.</p>
+<p>More precisely, in our python package <strong>init</strong>.py file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="c1"># Jupyter Extension points</span>
+<span class="k">def</span> <span class="nf">_jupyter_nbextension_paths</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">section</span><span class="o">=</span><span class="s2">&quot;notebook&quot;</span><span class="p">,</span>
+        <span class="c1"># the path is relative to the `my_fancy_module` directory</span>
+        <span class="n">src</span><span class="o">=</span><span class="s2">&quot;static&quot;</span><span class="p">,</span>
+        <span class="c1"># directory in the `nbextension/` namespace</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;my_fancy_module&quot;</span><span class="p">,</span>
+        <span class="c1"># _also_ in the `nbextension/` namespace</span>
+        <span class="n">require</span><span class="o">=</span><span class="s2">&quot;my_fancy_module/index&quot;</span><span class="p">)]</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>So let’s transform that to our needs, and write in the <code class="docutils literal notranslate"><span class="pre">appbarpy/__init__.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="k">def</span> <span class="nf">_jupyter_nbextension_paths</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;section&quot;</span><span class="p">:</span> <span class="s2">&quot;notebook&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;src&quot;</span><span class="p">:</span> <span class="s2">&quot;static&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dest&quot;</span><span class="p">:</span> <span class="s2">&quot;appbar&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;require&quot;</span><span class="p">:</span> <span class="s2">&quot;appbar/main&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+</pre></div>
+</div>
+<p>According to documentation, we can now install this nbextension from the python module using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jupyter nbextension install appbarpy --py --sys-prefix
+jupyter nbextension <span class="nb">enable</span> appbarpy --py --sys-prefix
+</pre></div>
+</div>
+<p>Let’s try it out right now, and see what happen:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jupyter nbextension install appbarpy --py --sys-prefix
+...
+ModuleNotFoundError: No module named <span class="s1">&#39;appbarpy&#39;</span>
+</pre></div>
+</div>
+<p>well that’s a simple one, we need python to be able to find our package. we have two options here:</p>
+<ul class="simple">
+<li><p><strong>option 1</strong>: quick and dirty
+we add path to appbarpy into PYTHONPATH, not very suistanable to on the long terme, but easy to do, quick to try out</p></li>
+<li><p><strong>option 2</strong>: the setup.py file, allowing us to use pip install -e nice one don’t you think?</p></li>
+</ul>
+<p>Option 2 is the best long terme speaking, so long terme, we will go with this.
+But short terme we will setup the pythonpath and try it out directly to debug our current modification.</p>
+<div class="section" id="option-1">
+<h3>Option 1<a class="headerlink" href="#option-1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="nv">$PWD</span>
+.../appbar
+
+<span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$PYTHONPATH</span>:<span class="nv">$PWD</span>
+
+jupyter nbextension install appbarpy --py --sys-prefix
+...
+jupyter nbextension <span class="nb">enable</span> appbarpy --py --sys-prefix
+...
+Enabling notebook extension appbar/main...
+      - Validating: OK
+</pre></div>
+</div>
+<p>yay ! it worked, well at least it installed the nbextension.</p>
+<p>let’s try it out into a notebook</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>	jupyter notebook
+</pre></div>
+</div>
+<p>and then you create a notebook from the manager.</p>
+<p>Tadddaaaa it worked ! wouhou</p>
+<p><img alt="alt text" src="react_comm_1.png" /></p>
+</div>
+<div class="section" id="option-2">
+<h3>Option 2<a class="headerlink" href="#option-2" title="Permalink to this headline">¶</a></h3>
+<p>Option 1 was a handcraft, it’s was justified for  quick testing, but you might find a bit tiring to set PYTHONPATH all the time.
+A solution would be to package it, using setuptool. It is obviously not an obligation to make it work, but it will come with some benefits which are: publishing it if you want, and ease its sharing with other people, include some script to ease install…</p>
+<div class="section" id="setup-py">
+<h4>setup.py<a class="headerlink" href="#setup-py" title="Permalink to this headline">¶</a></h4>
+<p>if you haven’t package a python package python before, i recommend to read the <a class="reference external" href="https://packaging.python.org/tutorials/packaging-projects/">official doc</a> on that matter.</p>
+<p>here below the content of  my setup.py:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">setuptools</span>
+
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;README.md&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="n">long_description</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="n">setuptools</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;appbar&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span>
+    <span class="n">author</span><span class="o">=</span><span class="s2">&quot;Thomas Pouvreau&quot;</span><span class="p">,</span>
+    <span class="n">author_email</span><span class="o">=</span><span class="s2">&quot;thomas.pouvreau@weatherforce.org&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;a small example widget developped with React&quot;</span><span class="p">,</span>
+    <span class="n">long_description</span><span class="o">=</span><span class="n">long_description</span><span class="p">,</span>
+    <span class="n">long_description_content_type</span><span class="o">=</span><span class="s2">&quot;text/markdown&quot;</span><span class="p">,</span>
+    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="n">setuptools</span><span class="o">.</span><span class="n">find_packages</span><span class="p">(),</span>
+    <span class="n">classifiers</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;Programming Language :: Python :: 3&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;License :: OSI Approved :: MIT License&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Operating System :: OS Independent&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">python_requires</span><span class="o">=</span><span class="s1">&#39;&gt;=3.6&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>In order for it work, I also added a small readme. right now there is pretty much nothing, but at somepoint it will be useful.
+Also, I added a MIT License as it is mentionned in doc.</p>
+<p>what we want to do here is to leverage pip capabilities to make sure that when we install our package with pip install, it also install the nbextension so at the end, to install our project we just have to do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install appbar
+</pre></div>
+</div>
+<p>As we would with a custom widget from ipywidgets template.</p>
+<p>On <a class="reference external" href="https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Distributing%20Jupyter%20Extensions%20as%20Python%20Packages.html">jupyter notebook documentation</a> they are giving us an example on how you would do such a thing.
+According to this documentation, we need a appbar.json into appbar folder, containing this:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+	<span class="s2">&quot;load_extensions&quot;</span><span class="o">:</span> <span class="p">{</span>
+		<span class="s2">&quot;appbar/main&quot;</span><span class="o">:</span> <span class="kc">true</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>It is said to add to your setup few new arguments, which are include_package_data, data_files, zip_safe, here you will have our new setup.py:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">setuptools</span>
+
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;README.md&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="n">long_description</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="n">setuptools</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;appbar&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span>
+    <span class="n">author</span><span class="o">=</span><span class="s2">&quot;Thomas Pouvreau&quot;</span><span class="p">,</span>
+    <span class="n">author_email</span><span class="o">=</span><span class="s2">&quot;thomas.pouvreau@weatherforce.org&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;a small example widget developped with React&quot;</span><span class="p">,</span>
+    <span class="n">long_description</span><span class="o">=</span><span class="n">long_description</span><span class="p">,</span>
+    <span class="n">long_description_content_type</span><span class="o">=</span><span class="s2">&quot;text/markdown&quot;</span><span class="p">,</span>
+    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">include_package_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">data_files</span><span class="o">=</span><span class="p">[</span>
+        <span class="c1"># like jupyter nbextension install --sys-prefix</span>
+        <span class="p">(</span><span class="s2">&quot;share/jupyter/nbextensions/appbar&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;appbarpy/static/main.js&quot;</span><span class="p">]),</span>
+        <span class="c1"># like jupyter nbextension enable --sys-prefix</span>
+        <span class="p">(</span><span class="s2">&quot;etc/jupyter/nbconfig/notebook.d&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;appbar.json&quot;</span><span class="p">])</span>
+    <span class="p">],</span>
+    <span class="n">packages</span><span class="o">=</span><span class="n">setuptools</span><span class="o">.</span><span class="n">find_packages</span><span class="p">(),</span>
+    <span class="n">classifiers</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;Programming Language :: Python :: 3&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;License :: OSI Approved :: MIT License&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Operating System :: OS Independent&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">python_requires</span><span class="o">=</span><span class="s1">&#39;&gt;=3.6&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>in addition, we need to create a MANIFEST.in file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">recursive</span><span class="o">-</span><span class="n">include</span> <span class="n">appbar</span><span class="o">.</span><span class="n">json</span>
+<span class="n">recursive</span><span class="o">-</span><span class="n">include</span> <span class="n">appbarpy</span><span class="o">/</span><span class="n">static</span> <span class="o">*.</span><span class="n">js</span>
+</pre></div>
+</div>
+<p>for now we can test if it install normally with :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install .
+jupyter nbextension list
+</pre></div>
+</div>
+<blockquote>
+<div><p>first, make sure you have uninstall the nbextension and disable it: use jupyter nbextension disable then jupyter nbextension uninstall
+Normally here you will see that appbar/main is in the nbextension list, aaaand, if you try it in the notebook, your extension will still be there.
+Yay!</p>
+</div></blockquote>
+</div>
+</div>
+</div>
+<div class="section" id="entering-the-fun-part">
+<h2>Entering the Fun part<a class="headerlink" href="#entering-the-fun-part" title="Permalink to this headline">¶</a></h2>
+<p>Okay, so far we succeeded in creating a basic notebook extension, loading it from our python package and we also managed to automate the install process.
+What we need to do now is to initiate a communication with our Python package, receive it on the front end side and react accordingly.</p>
+<div class="section" id="starting-a-communication-from-kernel">
+<h3>Starting a communication from Kernel<a class="headerlink" href="#starting-a-communication-from-kernel" title="Permalink to this headline">¶</a></h3>
+<p>Let’s do as we did before, which is create a communication channel from kernel.
+for now, just add this in a your notebook. <code class="docutils literal notranslate"><span class="pre">communication</span></code> will be the object
+acting as a <em>socket</em>, which will allow you to communicate with the front end.
+For now we will stick with it and later we will put it in a more sophisticated
+object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ipykernel.comm</span> <span class="kn">import</span> <span class="n">Comm</span>
+
+<span class="n">communication</span> <span class="o">=</span> <span class="n">Comm</span><span class="p">(</span><span class="n">target_name</span><span class="o">=</span><span class="s2">&quot;appbar_comm&quot;</span><span class="p">,</span>
+                     <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;this is the title&quot;</span><span class="p">})</span>
+
+
+<span class="nd">@communication</span><span class="o">.</span><span class="n">on_msg</span>
+<span class="k">def</span> <span class="nf">received</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="receiving-a-communication-within-our-front-end-objects">
+<h3>Receiving a communication within our front end objects<a class="headerlink" href="#receiving-a-communication-within-our-front-end-objects" title="Permalink to this headline">¶</a></h3>
+<p>Okay so now is the tricky part: from <a class="reference external" href="https://jupyter-notebook.readthedocs.io/en/stable/comms.html#opening-a-comm-from-the-kernel">jupyter notebook documentation</a> on how to open a comm from the kernel, we can see that we have to register a target using Jupyter object imported dynamically. For our component to be able to work with it, we have several solutions:</p>
+<ul class="simple">
+<li><p>one would be to put everything coming from the kernel into a Context, and then pass this context to the rest of the component subcomponent.</p></li>
+<li><p>another one would be to use React composition pattern, and pass received data to children through props.</p></li>
+<li><p>a third one would be to use a redux store, and it would be then very similar to how ipywidgets work. (store would took the model place)</p></li>
+</ul>
+<p>This is a fundamental question on how we would like to build our future library: knowing that there are several ways to achieve the absolute same result, but with different levels of complexity, which one should we choose? Should we even choose one? Do we need to let developers access all these different ways of achieving it? If so why? And why not?</p>
+<p>In this very example we will use the second option, for simplicity, but we keep in mind that there is at the very least, two other options to achieve it, and most likely several more.</p>
+<p>So, for simplicity, we will create a comm and data object and pass it as props to App component.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">appbar/appbarjs/src/index.js</span></code>:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span>
+<span class="kr">import</span> <span class="nx">ReactDOM</span> <span class="nx">from</span> <span class="s1">&#39;react-dom&#39;</span>
+<span class="kr">import</span> <span class="nx">App</span> <span class="nx">from</span> <span class="s1">&#39;./App&#39;</span>
+<span class="kd">let</span> <span class="nx">promise</span> <span class="o">=</span> <span class="kr">import</span><span class="p">(</span><span class="s1">&#39;base/js/namespace&#39;</span><span class="p">)</span>
+
+
+<span class="kr">export</span> <span class="kr">const</span> <span class="nx">load_ipython_extension</span> <span class="o">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="nx">Jupyter</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">Jupyter</span><span class="p">.</span><span class="nx">notebook</span><span class="p">.</span><span class="nx">kernel</span><span class="p">.</span><span class="nx">comm_manager</span><span class="p">.</span><span class="nx">register_target</span><span class="p">(</span><span class="s1">&#39;appbar_comm&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">comm</span><span class="p">,</span> <span class="nx">msg</span><span class="p">){</span>
+            <span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">App</span> <span class="nx">comm</span><span class="o">=</span><span class="p">{</span><span class="nx">comm</span><span class="p">}</span> <span class="nx">data</span><span class="o">=</span><span class="p">{</span><span class="nx">msg</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">data</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">,</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;notebook-container&#39;</span><span class="p">))</span>
+        <span class="p">})</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>and then, in <code class="docutils literal notranslate"><span class="pre">appbar/appbarjs/src/App.js</span></code>:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span>import React from &#39;react&#39;
+
+const App = (props) =&gt; {
+	return &lt;h1&gt; Hello, {props.data.title}! &lt;/h1&gt;
+}
+
+export default App
+</pre></div>
+</div>
+<p>we just need to rebuild in dev mode, and re install the nbextension.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> appbar/appbarjs/
+yarn dev
+<span class="nb">cd</span> ..
+pip uninstall appbar
+pip install .
+jupyter notebook test.ipynb
+</pre></div>
+</div>
+<p>We see absolutly nothing… but, we need to instantiate from kernel remember? and, we are supposed to render once the connection is open, so let’s open a connection ! lets use the python snippet we defined earlier to create a comm from kernel, and put it in the first cell of test.ipynb.
+We launch it and bouyah! it’s working !!!</p>
+<p>But… we just destroyed the notebook… maybe, it is time to think about how to target the cell output instead of destroying the whole notebook don’t you think?</p>
+<p>Well I knew you would agree, moving on !</p>
+</div>
+<div class="section" id="cell-output">
+<h3>Cell output<a class="headerlink" href="#cell-output" title="Permalink to this headline">¶</a></h3>
+<p>Well well, in <a class="reference external" href="https://github.com/timbr-io/jupyter-react-js/blob/master/src/output.js">this wonderful project</a>, we have a beginning of answer on how we could possibly do such a thing <a class="reference external" href="https://github.com/timbr-io/jupyter-react-js/blob/master/src/index.js">index.js</a>, and it is referred right here:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">...</span>
+ <span class="kr">const</span> <span class="nx">msg_id</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">parent_header</span><span class="p">.</span><span class="nx">msg_id</span><span class="p">;</span>
+ <span class="kr">const</span> <span class="nx">cell</span> <span class="o">=</span> <span class="nx">Jupyter</span><span class="p">.</span><span class="nx">notebook</span><span class="p">.</span><span class="nx">get_msg_cell</span><span class="p">(</span> <span class="nx">msg_id</span> <span class="p">);</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>then we have a bunch of functions to clear the cell output, to set it etc… on ipywidgets project, you will find something much more complex but very similar in the idea, so for now, we will stick to the most simple solution and see its limitation.
+but first, let’s print this cell, and see if we can render the react just after :)</p>
+<p>So for it, I just printed the cell, and realized that there was an output_area inside. So I’ve sligthly changed index.js to that:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span>
+<span class="kr">import</span> <span class="nx">ReactDOM</span> <span class="nx">from</span> <span class="s1">&#39;react-dom&#39;</span>
+<span class="kr">import</span> <span class="nx">App</span> <span class="nx">from</span> <span class="s1">&#39;./App&#39;</span>
+<span class="kd">let</span> <span class="nx">promise</span> <span class="o">=</span> <span class="kr">import</span><span class="p">(</span><span class="s1">&#39;base/js/namespace&#39;</span><span class="p">)</span>
+
+
+<span class="kr">export</span> <span class="kr">const</span> <span class="nx">load_ipython_extension</span> <span class="o">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+
+   <span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="nx">Jupyter</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      
+      <span class="nx">Jupyter</span><span class="p">.</span><span class="nx">notebook</span><span class="p">.</span><span class="nx">kernel</span><span class="p">.</span><span class="nx">comm_manager</span><span class="p">.</span><span class="nx">register_target</span><span class="p">(</span><span class="s1">&#39;appbar_comm&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">comm</span><span class="p">,</span> <span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+
+         <span class="kr">const</span> <span class="nx">msg_id</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">parent_header</span><span class="p">.</span><span class="nx">msg_id</span>
+         <span class="kr">const</span> <span class="nx">cell</span> <span class="o">=</span> <span class="nx">Jupyter</span><span class="p">.</span><span class="nx">notebook</span><span class="p">.</span><span class="nx">get_msg_cell</span><span class="p">(</span><span class="nx">msg_id</span><span class="p">);</span>
+         <span class="k">if</span><span class="p">(</span><span class="nx">cell</span><span class="p">.</span><span class="nx">output_area</span><span class="p">.</span><span class="nx">selector</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="p">{</span>
+            <span class="kr">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="nx">cell</span><span class="p">.</span><span class="nx">output_area</span><span class="p">.</span><span class="nx">selector</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">getElementsByClassName</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">App</span> <span class="nx">comm</span><span class="o">=</span><span class="p">{</span><span class="nx">comm</span><span class="p">}</span> <span class="nx">data</span><span class="o">=</span><span class="p">{</span><span class="nx">msg</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">data</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">,</span> <span class="nx">output</span><span class="p">)</span>
+         <span class="p">}</span>
+      <span class="p">})</span>
+   <span class="p">})</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you recompile, build and run the notebook again, you will see text get inserted right under the cell.</p>
+</div>
+</div>
+<div class="section" id="bi-directional-communication">
+<h2>Bi-directional communication<a class="headerlink" href="#bi-directional-communication" title="Permalink to this headline">¶</a></h2>
+<p>So far, we managed to :</p>
+<ul class="simple">
+<li><p>create a nbextension using JSX and React</p></li>
+<li><p>instantiate it from kernel leveraging Jupyter’s communication system</p></li>
+<li><p>automate the install from python package using setup.py and some Jupyter’s config files</p></li>
+<li><p>made sure that the widget print itself right under the notebook’s calling cell</p></li>
+</ul>
+<p>Now, we want to :</p>
+<ul class="simple">
+<li><p>make sure that we can communicate back to kernel from widget</p></li>
+<li><p>update the widget from kernel</p></li>
+</ul>
+<p>To make that happen, we will make a simple widget printing the number of click on a button.</p>
+<p>Let’s change app.js to :</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span>import React from &#39;react&#39;
+
+
+class App extends React.Component {
+
+  constructor(props) {
+     super(props)
+     this.state = {data: props.data}
+  
+     this.handleMsg = this.handleMsg.bind(this)
+     this.handleClick = this.handleClick.bind(this)
+  
+     props.comm.on_msg(this.handleMsg)
+  }
+  
+  handleClick(e) {
+     this.props.comm.send(&quot;click&quot;)
+  }
+  
+  handleMsg(msg) {
+     const data = msg.content.data
+     this.setState({data: data})
+     console.log(&quot;hey ! we received a msg&quot;)
+  }
+  
+  render() {
+     return(
+       &lt;div style={{marginLeft: &quot;150px&quot;}} &gt;
+         &lt;h1&gt; Hello {this.state.data.title}! &lt;/h1&gt;
+         &lt;button onClick={ this.handleClick }&gt; count +1 &lt;/button&gt;
+         &lt;h3&gt; count: {this.state.data.count} &lt;/h3&gt;
+       &lt;/div&gt;
+     )
+  }
+}
+
+export default App
+</pre></div>
+</div>
+<p>What we are doing here is passing props.data to this.state at initialisation, then we handle the updates through this.handleMsg that we pass as callback to props.comm.on_msg method.
+So everytime we receive data, we update the state, and react take care of the rest !</p>
+<p>Then we just have to update the python part:</p>
+<p>Inside the test.ipynb:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ipykernel.comm</span> <span class="kn">import</span> <span class="n">Comm</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;this is the title&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span>
+<span class="p">}</span>
+<span class="n">communication</span> <span class="o">=</span> <span class="n">Comm</span><span class="p">(</span><span class="n">target_name</span><span class="o">=</span><span class="s2">&quot;appbar_comm&quot;</span><span class="p">,</span>
+                     <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+
+<span class="nd">@communication</span><span class="o">.</span><span class="n">on_msg</span>
+<span class="k">def</span> <span class="nf">received</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">communication</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Click and the counter should get incremented.  You may also evaluate <code class="docutils literal notranslate"><span class="pre">data</span></code> in
+a cell, click on the button and print again.</p>
+</div>
+<div class="section" id="creating-a-proper-output-area">
+<h2>Creating a proper output area<a class="headerlink" href="#creating-a-proper-output-area" title="Permalink to this headline">¶</a></h2>
+<p>Above we’ve explicitely set a margin with <code class="docutils literal notranslate"><span class="pre">{{marginLeft:</span> <span class="pre">&quot;150px&quot;}}</span></code> in order to
+fit the jupyter output area. Let’s now properly create all the elements that
+make an output area:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span>
+<span class="kr">import</span> <span class="nx">ReactDOM</span> <span class="nx">from</span> <span class="s1">&#39;react-dom&#39;</span>
+<span class="kr">import</span> <span class="nx">App</span> <span class="nx">from</span> <span class="s1">&#39;./App&#39;</span>
+<span class="kd">let</span> <span class="nx">promise</span> <span class="o">=</span> <span class="kr">import</span><span class="p">(</span><span class="s1">&#39;base/js/namespace&#39;</span><span class="p">)</span>
+
+<span class="kr">const</span> <span class="nx">create_subarea</span> <span class="o">=</span> <span class="p">(</span><span class="nx">output</span><span class="p">)</span> <span class="p">=&gt;{</span>
+    <span class="kr">const</span> <span class="nx">area</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">)</span>
+    <span class="nx">area</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;output_area&#39;</span><span class="p">)</span>
+    <span class="nx">output</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">area</span><span class="p">)</span>
+    
+    <span class="kr">const</span> <span class="nx">prompt</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">)</span>
+    <span class="nx">prompt</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;prompt&#39;</span><span class="p">)</span>
+    <span class="nx">prompt</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;prompt_output&#39;</span><span class="p">)</span>
+    <span class="nx">area</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">prompt</span><span class="p">)</span>
+    
+    
+    <span class="kr">const</span> <span class="nx">subarea</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">)</span>
+    <span class="nx">subarea</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;output_subarea&#39;</span><span class="p">)</span>
+    <span class="nx">area</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">subarea</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">subarea</span>
+<span class="p">}</span>
+
+<span class="kr">export</span> <span class="kr">const</span> <span class="nx">load_ipython_extension</span> <span class="o">=</span> <span class="p">()</span> <span class="p">=&gt;{</span>
+
+    <span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span> <span class="nx">Jupyter</span> <span class="p">=&gt;{</span>
+
+        <span class="nx">Jupyter</span><span class="p">.</span><span class="nx">notebook</span><span class="p">.</span><span class="nx">kernel</span><span class="p">.</span><span class="nx">comm_manager</span><span class="p">.</span><span class="nx">register_target</span><span class="p">(</span><span class="s1">&#39;appbar_comm&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">comm</span><span class="p">,</span> <span class="nx">msg</span><span class="p">){</span>
+
+            <span class="kr">const</span> <span class="nx">msg_id</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">parent_header</span><span class="p">.</span><span class="nx">msg_id</span>
+            <span class="kr">const</span> <span class="nx">cell</span> <span class="o">=</span> <span class="nx">Jupyter</span><span class="p">.</span><span class="nx">notebook</span><span class="p">.</span><span class="nx">get_msg_cell</span><span class="p">(</span> <span class="nx">msg_id</span> <span class="p">);</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">cell</span><span class="p">.</span><span class="nx">output_area</span><span class="p">.</span><span class="nx">selector</span><span class="p">[</span><span class="mi">0</span><span class="p">]){</span>
+                <span class="kr">const</span> <span class="nx">output</span> <span class="o">=</span> <span class="nx">cell</span><span class="p">.</span><span class="nx">output_area</span><span class="p">.</span><span class="nx">selector</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">getElementsByClassName</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> 
+                <span class="kr">const</span> <span class="nx">subarea</span> <span class="o">=</span> <span class="nx">create_subarea</span><span class="p">(</span><span class="nx">output</span><span class="p">)</span>
+                <span class="nx">ReactDOM</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">App</span> <span class="nx">comm</span><span class="o">=</span><span class="p">{</span><span class="nx">comm</span><span class="p">}</span> <span class="nx">data</span><span class="o">=</span><span class="p">{</span><span class="nx">msg</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">data</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">,</span> <span class="nx">subarea</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Now the widget is displayed in a proper output area.</p>
+</div>
+<div class="section" id="appbar-at-last">
+<h2>Appbar at last!<a class="headerlink" href="#appbar-at-last" title="Permalink to this headline">¶</a></h2>
+<p>Now, let’s import Material-UI Appbar into our project.</p>
+<p>Material-UI import:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> appbar/appbarjs
+yarn add @material-ui/core @material-ui/icons typeface-roboto
+</pre></div>
+</div>
+<p>Insert <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">&quot;typeface-roboto&quot;</span></code> into index.js and modify <code class="docutils literal notranslate"><span class="pre">App.js</span></code> like this:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span>import React from &#39;react&#39;
+
+import { makeStyles } from &#39;@material-ui/core/styles&#39;;
+import AppBar from &#39;@material-ui/core/AppBar&#39;;
+import Toolbar from &#39;@material-ui/core/Toolbar&#39;;
+import Typography from &#39;@material-ui/core/Typography&#39;;
+import Button from &#39;@material-ui/core/Button&#39;;
+import IconButton from &#39;@material-ui/core/IconButton&#39;;
+import MenuIcon from &#39;@material-ui/icons/Menu&#39;;
+
+const useStyles = makeStyles((theme) =&gt; ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
+
+function ButtonAppBar() {
+  const classes = useStyles();
+
+  return (
+    &lt;div className={classes.root}&gt;
+      &lt;AppBar position=&quot;static&quot;&gt;
+        &lt;Toolbar&gt;
+          &lt;IconButton edge=&quot;start&quot; className={classes.menuButton} color=&quot;inherit&quot; aria-label=&quot;menu&quot;&gt;
+            &lt;MenuIcon /&gt;
+          &lt;/IconButton&gt;
+          &lt;Typography variant=&quot;h6&quot; className={classes.title}&gt;
+            News
+          &lt;/Typography&gt;
+          &lt;Button color=&quot;inherit&quot;&gt;Login&lt;/Button&gt;
+        &lt;/Toolbar&gt;
+      &lt;/AppBar&gt;
+    &lt;/div&gt;
+  );
+}
+
+class App extends React.Component{
+    
+    constructor(props){
+        super(props)
+        this.state = {data: props.data}
+        
+        this.handleMsg = this.handleMsg.bind(this)
+        this.handleClick = this.handleClick.bind(this)
+        
+        props.comm.on_msg(this.handleMsg)
+    }
+    
+    handleClick(e){
+        this.props.comm.send(&quot;click&quot;)
+    }
+    
+    handleMsg( msg ){
+        const data = msg.content.data
+        this.setState({data: data})
+        console.log(&quot;hey ! we received a msg&quot;)
+    }
+    
+    render(){
+        return(
+        &lt;div&gt;
+          &lt;ButtonAppBar/&gt;
+          &lt;h1&gt; Hello {this.state.data.title}! &lt;/h1&gt;
+          &lt;button onClick={ this.handleClick }&gt; count +1 &lt;/button&gt;
+          &lt;h3&gt; count: {this.state.data.count} &lt;/h3&gt;
+        &lt;/div&gt;
+        )
+    }
+}
+
+export default App
+</pre></div>
+</div>
+<p>At this point it won’t compile since it needs a CSS loader:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>yarn add style-loader css-loader file-loader --dev
+</pre></div>
+</div>
+<p>Then in webpack.config.js add these rules:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="c1">// ...</span>
+    <span class="p">{</span>
+        <span class="nx">test</span><span class="o">:</span> <span class="sr">/\.css$/i</span><span class="p">,</span>
+        <span class="nx">use</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;style-loader&#39;</span><span class="p">,</span> <span class="s1">&#39;css-loader&#39;</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nx">test</span><span class="o">:</span> <span class="sr">/\.(woff|woff2|eot|ttf|otf)$/</span><span class="p">,</span>
+        <span class="nx">use</span><span class="o">:</span> <span class="p">[</span>
+            <span class="s1">&#39;file-loader&#39;</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">},</span>
+<span class="c1">// ...</span>
+</pre></div>
+</div>
+<p>Then:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>yarn build <span class="o">&amp;&amp;</span> <span class="nb">cd</span> .. <span class="o">&amp;&amp;</span> pip install . <span class="o">&amp;&amp;</span> jupyter notebook test.ipynb
+</pre></div>
+</div>
+<p>You should now have a nice appbar printed on you notebook.</p>
+<p>A further step would be to instantiate it and set events on it for nice rendering.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ipyreact</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="developer-guide.html">Developer guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cookbook-series.html">Cookbooks series on how to build a widget for Jupyter from scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-widget.html">Create a Custom widget</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="developer-guide.html">Developer guide</a><ul>
+  <li><a href="cookbook-series.html">Cookbooks series on how to build a widget for Jupyter from scratch</a><ul>
+      <li>Previous: <a href="react_nbextension_trial.html" title="previous chapter">React Extension trial</a></li>
+      <li>Next: <a href="custom-widget.html" title="next chapter">Create a Custom widget</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, weatherforce.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/react_comm_trial.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

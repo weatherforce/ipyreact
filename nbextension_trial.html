@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notebook Extension &#8212; ipyreact 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Comms Cookbook" href="comms_trial.html" />
+    <link rel="prev" title="Cookbooks series on how to build a widget for Jupyter from scratch" href="cookbook-series.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="notebook-extension">
+<h1>Notebook Extension<a class="headerlink" href="#notebook-extension" title="Permalink to this headline">¶</a></h1>
+<p>This document aims to provide a recipe on how to do a Notebook extension from the start. Its second purpose would be to give the reader details on what is exactly a notebook extension, and how he/she should manipulate them.</p>
+<div class="section" id="basic-install">
+<h2>Basic install<a class="headerlink" href="#basic-install" title="Permalink to this headline">¶</a></h2>
+<p>In a dedicated folder, create a virtual environment and activate it. Then, install Jupyter Notebook.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir &lt;dedicated-folder&gt;
+<span class="nb">cd</span> &lt;dedicated-folder&gt;
+python3 -m venv venv
+<span class="nb">source</span> venv/bin/activate
+pip install notebook
+</pre></div>
+</div>
+<p>Once it is done, you can create the extension, like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir &lt;extension-name&gt;
+<span class="nb">cd</span> &lt;extension-name&gt; 
+touch extension/main.js
+</pre></div>
+</div>
+<p>Here you  are setup to create your very first notebook extension, congrats.</p>
+</div>
+<div class="section" id="what-is-a-notebook-extension-and-what-is-it-used-for">
+<h2>What is a notebook extension and what is it used for?<a class="headerlink" href="#what-is-a-notebook-extension-and-what-is-it-used-for" title="Permalink to this headline">¶</a></h2>
+<p>You can consider a notebook extension as a javascript module that will be loaded in notebooks, and or in manager screen. The idea is to provide notebook users a way to customize a bit their notebooks by extending them with some custom features, on the front end. The JavaScript module format used is AMD (Asynchronous Module Definition) modules specification provided by RequireJS library. So, if you want to use ES6 or JSX or any new kind of JavaScript, it needs to be transpiled targeting the AMD module format. Keep that in mind if you want to use newer frameworks such as React, View or Angular.</p>
+<blockquote>
+<div><p>Note: The Jupyter development team also provides what they called server extensions, which is a very cool way to extend the notebook server backend, such as connecting to web hooks, or provide a small API to other tools that would have the capability of connecting to this API.</p>
+</div></blockquote>
+</div>
+<div class="section" id="diving-in">
+<h2>Diving in<a class="headerlink" href="#diving-in" title="Permalink to this headline">¶</a></h2>
+<p>You should have a look at <a class="reference external" href="https://jupyter-notebook.readthedocs.io/en/stable/extending/frontend_extensions.html">notebook extension documentation</a>.</p>
+<p>It will provide very useful information so it is recommended to read that. Yet, I’ll try to show you how you can quickly set up your notebook extension:</p>
+<div class="section" id="main-js">
+<h3>main.js<a class="headerlink" href="#main-js" title="Permalink to this headline">¶</a></h3>
+<p>Start by copying this into <code class="docutils literal notranslate"><span class="pre">extension/main.js</span></code>:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">define</span><span class="p">([</span>
+    <span class="s1">&#39;base/js/namespace&#39;</span>
+<span class="p">],</span> <span class="kd">function</span><span class="p">(</span>
+    <span class="nx">Jupyter</span>
+<span class="p">)</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">load_ipython_extension</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span>
+            <span class="s1">&#39;This is the current notebook application instance:&#39;</span><span class="p">,</span>
+            <span class="nx">Jupyter</span><span class="p">.</span><span class="nx">notebook</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">load_ipython_extension</span><span class="o">:</span> <span class="nx">load_ipython_extension</span>
+    <span class="p">};</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>Let’s analyse it a bit. On the very first line, you have the <code class="docutils literal notranslate"><span class="pre">define</span></code> keyword that allows to define an AMD module. The documentation says that at the very least, your AMD module should expose a load_ipython_extension function to be loaded and interact with Jupyter. It is not completely true, since you can expose an empty function like this:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">...</span>
+<span class="k">return</span> <span class="p">{</span>
+	<span class="nx">load_ipython_extension</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(){};</span>
+<span class="p">}</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>Your module would be loaded, and your code executed even though it is not within this special function. But keep in mind that <strong>it has to be an AMD module</strong>.</p>
+<p>This piece of code imports ‘base/js/namespace’ which gets bound to the
+<code class="docutils literal notranslate"><span class="pre">Jupyter</span></code> object. It then allows you to interact with Jupyter directly, using
+that exposed <code class="docutils literal notranslate"><span class="pre">Jupyter</span></code> object.</p>
+<p>You can use it to add or remove buttons, extend notebook behaviours such as
+auto_completion, create a button acting as a link to another service and, most
+importantly for us, create the front end side of widgets!</p>
+<p>That looks good, but how do we install it? Well, you just had to ask:</p>
+<p>To install it in a normal way, just hit:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jupyter nbextension install extension/ --sys-prefix
+jupyter nbextension <span class="nb">enable</span> extension/main --sys-prefix
+</pre></div>
+</div>
+<blockquote>
+<div><p>Note: When developing an extension, you can use the –symlink flag to avoid having to type the commands above every time you update your code.</p>
+</div></blockquote>
+<p>Then start Jupyter Notebook:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jupyter notebook
+</pre></div>
+</div>
+<p>Create a new notebook and you should see in your browser console the message coming
+from your extension (<code class="docutils literal notranslate"><span class="pre">This</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">current</span> <span class="pre">notebook</span> <span class="pre">application</span> <span class="pre">instance...</span></code>).</p>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes, when messing with jupyter nbextension, you can corrupt some configuration files, it will then throw you an error right in your face, saying something about a json error on a file.
+When you executing <code class="docutils literal notranslate"><span class="pre">jupyter</span> <span class="pre">nbextension</span> <span class="pre">enable</span></code> it modifies a json configuration file and can make it invalid. But the trick is that you can have several configuration files, normally in <code class="docutils literal notranslate"><span class="pre">venv/etc/Jupyter/nbconfig/notebook.json</span></code>. Sometimes you will have more than one file, and they are not always easy to find. After some research, I found <a class="reference external" href="https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1211">this issue</a>, which gives us a code snippet that validates all Jupyter configuration files.</p>
+<p>When I had an issue, that code snippet returned:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Failed</span> <span class="n">JSON</span> <span class="n">file</span> <span class="ow">is</span><span class="p">:</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">USER</span><span class="o">/.</span><span class="n">jupyter</span><span class="o">/</span><span class="n">nbconfig</span><span class="o">/</span><span class="n">notebook</span><span class="o">.</span><span class="n">json</span>
+<span class="n">File</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">USER</span><span class="o">/</span><span class="n">weatherforce</span><span class="o">/</span><span class="n">Projects</span><span class="o">/</span><span class="n">nbextension_tryhard</span><span class="o">/</span><span class="n">venv</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">jupyter</span><span class="o">/</span><span class="n">nbconfig</span><span class="o">/</span><span class="n">notebook</span><span class="o">.</span><span class="n">json</span> <span class="ow">is</span> <span class="n">OK</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>So the first one was broken, it had a comma that wasn’t supposed to be there. Fixing it manually fixed the issue.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ipyreact</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="developer-guide.html">Developer guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cookbook-series.html">Cookbooks series on how to build a widget for Jupyter from scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-widget.html">Create a Custom widget</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="developer-guide.html">Developer guide</a><ul>
+  <li><a href="cookbook-series.html">Cookbooks series on how to build a widget for Jupyter from scratch</a><ul>
+      <li>Previous: <a href="cookbook-series.html" title="previous chapter">Cookbooks series on how to build a widget for Jupyter from scratch</a></li>
+      <li>Next: <a href="comms_trial.html" title="next chapter">Comms Cookbook</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, weatherforce.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/nbextension_trial.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

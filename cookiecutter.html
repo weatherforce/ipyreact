@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Use the Cookiecutter &#8212; ipyreact 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Adding a widget to ipyreact" href="make-a-widget.html" />
+    <link rel="prev" title="Create a Custom widget" href="custom-widget.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="use-the-cookiecutter">
+<h1>Use the Cookiecutter<a class="headerlink" href="#use-the-cookiecutter" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="first-step-create-an-empty-repository">
+<h2>First step: Create an empty repository<a class="headerlink" href="#first-step-create-an-empty-repository" title="Permalink to this headline">¶</a></h2>
+<p>would be to create an empty repository on gitlab, or github. Find the big button offering to create a new project and click on it.</p>
+<blockquote>
+<div><p>Note: Do not provide any Readme or license stuff right now, we want an empty repo, and its url.</p>
+</div></blockquote>
+</div>
+<div class="section" id="second-step-cookiecutter-readme">
+<h2>Second step: cookiecutter readme<a class="headerlink" href="#second-step-cookiecutter-readme" title="Permalink to this headline">¶</a></h2>
+<p>go on <a class="reference external" href="https://gitlab.com/weatherforce-platform/cookiecutter-ipyreact-widget">cookiecutter-ipyreact-widget</a> repository page.
+According to readme :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install cookiecutter
+cookiecutter git@gitlab.com:weatherforce-platform/cookiecutter-ipyreact-widget.git
+</pre></div>
+</div>
+<p>If you do not have access to ssh you will have to use https with the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cookiecutter  https://gitlab.com/weatherforce-platform/cookiecutter-ipyreact-widget.git
+And start filling the provided form. For widget_name use camel <span class="k">case</span>. Eg testWidget
+&gt; Note: fill asked url with the repository url.
+
+<span class="c1">## Third step: finish project initialisation</span>
+
+Enter your widget folder, and turn it into a repository.  
+
+<span class="sb">```</span>bash
+<span class="nb">cd</span> widget_name
+git init
+git remote add origin &lt;repo-url&gt;
+git add .
+git commit -m <span class="s2">&quot;First commit&quot;</span>
+git push
+</pre></div>
+</div>
+<p>You can then provide a venv and install all the required dependencies.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 virtualenv venv
+<span class="nb">source</span> venv/bin/activate
+pip install -r requirements.txt
+</pre></div>
+</div>
+<p>Finally, you will need to access your code from a notebook. To do so we need to install it. To avoid the hassle of re-installing it every time you make a change on your codebase do :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -e .
+</pre></div>
+</div>
+<p>then go on js side, install and transpile it on dev mode and go back to parent folder:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> js
+npm install
+npm run dev
+<span class="nb">cd</span> ..
+</pre></div>
+</div>
+<p>Install js side on dev mode as well using Jupyter part from Readme:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jupyter nbextension install --py --symlink --sys-prefix pythonpackagename
+jupyter nbextension <span class="nb">enable</span> --py --sys-prefix pythonpackagename
+</pre></div>
+</div>
+<p>If you do not have root access replace –sys-prefix with –user</p>
+<p>There you go ! the interesting parts begins  now !</p>
+</div>
+<div class="section" id="fourth-step-code">
+<h2>Fourth step: code<a class="headerlink" href="#fourth-step-code" title="Permalink to this headline">¶</a></h2>
+<p>An ipyreact widget is a compound of a python Widget’s child class, and a notebook extension (which is a javascript piece of code, interacting with jupyter) using React library.
+To have a communication between those two, Jupyter provides the comm package, which is a communication bridge between front end and back end. Find below a schema to ease comprehension.</p>
+<p><img alt="diagram showing a global picture of a widget's parts communicate with each other" src="_images/cookiecutter_1.png" /></p>
+<p>Fortunately, you don’t really have to handle the communication part, the Widgets classes on both side are meant to save you the time and trouble. Instead, you can directly focus on
+creating your widget. To do so you will need to have a good knowledge of React in addition to Javascript and Python.</p>
+<p>To create a Widget, my advice is to start directly with the front end, creating all necessary parts, with hard coded state and props, and once it is up and running, you can then start to
+pass state and props from python side.</p>
+<p>let’s dive in!</p>
+<div class="section" id="development-environment">
+<h3>Development environment<a class="headerlink" href="#development-environment" title="Permalink to this headline">¶</a></h3>
+<p>Now that everything is set up, we need a way to quickly test what we are developping. to do so, you have to open at least three terminals, one for launching a notebook where you will import
+your widget, aka the TESTME.ipynb, one to launch the webpack watch server, and finally one to develop.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#first terminal</span>
+jupyter notebook TESTME.ipynb
+
+<span class="c1">#second terminal</span>
+<span class="nb">cd</span> js
+npm run watch
+
+<span class="c1">#third terminal</span>
+<span class="nb">cd</span> js/src
+vim widget.js
+</pre></div>
+</div>
+<p>then try to edit widget.js, save it, and just hit the F5 (refresh) button focused on your web browser. You will see your changes directly on screen.</p>
+<p>Sadly, for python changes, you will need to stop and relaunch jupyter notebook server.</p>
+</div>
+<div class="section" id="communication-from-one-end-to-the-other">
+<h3>Communication from one end to the other<a class="headerlink" href="#communication-from-one-end-to-the-other" title="Permalink to this headline">¶</a></h3>
+<p>As described earlier, python side and front end communicate through the Comms channels. Comms is a Jupyter package designed by Jupyter team, and it provides communication channels, with ways to open them from both sides.<br />In our case, the python side is the one that opens the communication. More specifically every instance are providing a target_comm, which is the channel it is opening. So you have to make sure that both sides are talking to the same channel.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ipyreact</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="developer-guide.html">Developer guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cookbook-series.html">Cookbooks series on how to build a widget for Jupyter from scratch</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="custom-widget.html">Create a Custom widget</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="developer-guide.html">Developer guide</a><ul>
+  <li><a href="custom-widget.html">Create a Custom widget</a><ul>
+      <li>Previous: <a href="custom-widget.html" title="previous chapter">Create a Custom widget</a></li>
+      <li>Next: <a href="make-a-widget.html" title="next chapter">Adding a widget to ipyreact</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, weatherforce.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/cookiecutter.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

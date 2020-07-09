@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookbooks series on how to build a widget for Jupyter from scratch &#8212; ipyreact 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Notebook Extension" href="nbextension_trial.html" />
+    <link rel="prev" title="Developer guide" href="developer-guide.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="cookbooks-series-on-how-to-build-a-widget-for-jupyter-from-scratch">
+<h1>Cookbooks series on how to build a widget for Jupyter from scratch<a class="headerlink" href="#cookbooks-series-on-how-to-build-a-widget-for-jupyter-from-scratch" title="Permalink to this headline">¶</a></h1>
+<p>In this series you will find every piece of knowledge necessary to build
+a widget for Jupyter Notebook from scratch. In this series, I’ve integrated React,
+but you could use any other JS library or Framework to build the front end part
+and bind it with Python.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nbextension_trial.html">Notebook Extension</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nbextension_trial.html#basic-install">Basic install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nbextension_trial.html#what-is-a-notebook-extension-and-what-is-it-used-for">What is a notebook extension and what is it used for?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nbextension_trial.html#diving-in">Diving in</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nbextension_trial.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="comms_trial.html">Comms Cookbook</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="comms_trial.html#javascript-side">JavaScript side</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comms_trial.html#python-side">Python side</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comms_trial.html#test">Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comms_trial.html#what-s-happening">What’s happening?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="react_nbextension_trial.html">React Extension trial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="react_nbextension_trial.html#intro">Intro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="react_nbextension_trial.html#setting-up">setting up</a></li>
+<li class="toctree-l2"><a class="reference internal" href="react_nbextension_trial.html#adding-react-to-the-equation">Adding React to the equation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="react_nbextension_trial.html#live-testing">Live testing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="react_comm_trial.html">Jupyter + python + React using Comm</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="react_comm_trial.html#set-up">Set Up</a></li>
+<li class="toctree-l2"><a class="reference internal" href="react_comm_trial.html#nbextension-install-from-python">Nbextension install from Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="react_comm_trial.html#entering-the-fun-part">Entering the Fun part</a></li>
+<li class="toctree-l2"><a class="reference internal" href="react_comm_trial.html#bi-directional-communication">Bi-directional communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="react_comm_trial.html#creating-a-proper-output-area">Creating a proper output area</a></li>
+<li class="toctree-l2"><a class="reference internal" href="react_comm_trial.html#appbar-at-last">Appbar at last!</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ipyreact</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="developer-guide.html">Developer guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Cookbooks series on how to build a widget for Jupyter from scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-widget.html">Create a Custom widget</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="developer-guide.html">Developer guide</a><ul>
+      <li>Previous: <a href="developer-guide.html" title="previous chapter">Developer guide</a></li>
+      <li>Next: <a href="nbextension_trial.html" title="next chapter">Notebook Extension</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, weatherforce.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/cookbook-series.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

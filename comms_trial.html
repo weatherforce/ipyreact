@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comms Cookbook &#8212; ipyreact 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="React Extension trial" href="react_nbextension_trial.html" />
+    <link rel="prev" title="Notebook Extension" href="nbextension_trial.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="comms-cookbook">
+<h1>Comms Cookbook<a class="headerlink" href="#comms-cookbook" title="Permalink to this headline">¶</a></h1>
+<p>In this section, we will see how to open a bidirectionnal communication between Python code and a notebook extension using Jupyter’s <em>Comms</em>.
+The main steps will be to open a Comms from jupyter notebook, connect with an nb_extension and have a bidirectionnal communication from notebook to front end.
+This documentation should be seen as a complement to Jupyter’s Notebook documentation on <a class="reference external" href="https://jupyter-notebook.readthedocs.io/en/stable/comms.html">Comms</a>. So make
+sure to read this documentation, and most specifically the section talking about opening communication from the kernel,
+which means that the front end should be ready to receive a connection demand.</p>
+<div class="section" id="javascript-side">
+<h2>JavaScript side<a class="headerlink" href="#javascript-side" title="Permalink to this headline">¶</a></h2>
+<p>Let’s make a simple nb_extension as seen in <a class="reference internal" href="nbextension_trial.html"><span class="doc">nbextension cookbook</span></a>.
+This extension will register a comm and define a callback function that will get executed when it receives messages. This function will log the message and send a message containing the string <em>banana</em>.</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="nx">define</span><span class="p">([</span>
+    <span class="s1">&#39;base/js/namespace&#39;</span>
+<span class="p">],</span> <span class="kd">function</span><span class="p">(</span>
+    <span class="nx">Jupyter</span>
+<span class="p">)</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">load_extension</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">Jupyter</span><span class="p">.</span><span class="nx">notebook</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;kernel_ready.Kernel&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">Jupyter</span><span class="p">.</span><span class="nx">notebook</span><span class="p">.</span><span class="nx">kernel</span><span class="p">.</span><span class="nx">comm_manager</span><span class="p">.</span><span class="nx">register_target</span><span class="p">(</span>
+          <span class="s2">&quot;my_comm_target&quot;</span><span class="p">,</span>
+          <span class="kd">function</span> <span class="p">(</span><span class="nx">comm</span><span class="p">,</span> <span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">comm</span><span class="p">.</span><span class="nx">on_msg</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">msg</span><span class="p">){</span>
+              <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Received from Python:&quot;</span><span class="p">,</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span>
+              <span class="nx">comm</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s2">&quot;banana&quot;</span><span class="p">)</span>
+            <span class="p">})</span>
+          <span class="p">}</span>
+        <span class="p">)</span>
+      <span class="p">})</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">load_ipython_extension</span><span class="o">:</span> <span class="nx">load_extension</span><span class="p">,</span>
+    <span class="p">};</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>To test this, you have to create the comm_extension, and then install it, the same way as we did here <a class="reference internal" href="nbextension_trial.html"><span class="doc">nbextension cookbook</span></a>.</p>
+</div>
+<div class="section" id="python-side">
+<h2>Python side<a class="headerlink" href="#python-side" title="Permalink to this headline">¶</a></h2>
+<p>Here is Python code that will connect to the comm target created by the JavaScript code above.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ipykernel.comm</span> <span class="kn">import</span> <span class="n">Comm</span>
+
+<span class="n">my_comm</span> <span class="o">=</span> <span class="n">Comm</span><span class="p">(</span><span class="n">target_name</span><span class="o">=</span><span class="s2">&quot;my_comm_target&quot;</span><span class="p">)</span>
+<span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;apple&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">]</span>
+
+<span class="nd">@my_comm</span><span class="o">.</span><span class="n">on_msg</span>
+<span class="k">def</span> <span class="nf">_recv</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="c1"># Receive message from JavaScript and append it to items</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+    <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Quite simple isn’t it? The only part that might be tricky to understand is the
+<code class="docutils literal notranslate"><span class="pre">&#64;my_comm.on_msg</span></code> decorator. It aims to provide developers a way of defining a
+callback function, which will be called every time <code class="docutils literal notranslate"><span class="pre">my_comm</span></code> receives a
+message.</p>
+</div>
+<div class="section" id="test">
+<h2>Test<a class="headerlink" href="#test" title="Permalink to this headline">¶</a></h2>
+<p>To test this, create a notebook, copy the python code into a cell, and run it. Now you should be able to send a message to JavaScript with a cell like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_comm</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;Please send me more fruit!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You should see a message logged in the JavaScript console showing that your
+message has been received by the frontend.  Now if you evaluate the <code class="docutils literal notranslate"><span class="pre">items</span></code>
+variable in a new cell, you should see that it contains <em>banana</em>, which was
+sent from JavaScript and then received and appended to the list by the <code class="docutils literal notranslate"><span class="pre">_recv</span></code>
+function.</p>
+<blockquote>
+<div><p>Notes: you will see that here the python side is used as it is, it is not a
+server_extension as I initially thought, which is a good thing, because it
+will be much easier to package and use.</p>
+</div></blockquote>
+</div>
+<div class="section" id="what-s-happening">
+<h2>What’s happening?<a class="headerlink" href="#what-s-happening" title="Permalink to this headline">¶</a></h2>
+<p>Well, you have to consider this piece of code as two code bases working
+together.  You have a front end part that loads when notebook starts, and waits
+for an incoming connection, on a comm_channel called <code class="docutils literal notranslate"><span class="pre">my_comm_target</span></code>.  The
+incoming connection can come from either a server_extension, or in this case,
+directly from a notebook cell. The code in this cell creates <code class="docutils literal notranslate"><span class="pre">my_comm</span></code>, a Comm
+instance that connects to <code class="docutils literal notranslate"><span class="pre">my_comm_target</span></code> and sends data through it. At the
+same time, it define a callback function that is triggered everytime <code class="docutils literal notranslate"><span class="pre">my_comm</span></code>
+receives messages.</p>
+<p>This is how you can create a bridge between your python code, and a visual
+effect of it, which is written in javascript.</p>
+<p>And this is what is happening under the hood for ipywidgets. It is nothing more
+than that. The really impressive improvement though on ipywidgets is the way
+communication is handled, the fact that their is an MVC framework in place with
+Backbone.js on the front end. The way they handle the print and the embeding is
+also very interesting. The limitation comes from the fact that to embed other
+libraries such as React, that brings a lot to the table, we’d have to embed it
+within Backbone.js and loose a lot of the React library capabilities.</p>
+<p>To use React, it is really important to investigate on how to reproduce this
+AMD syntax with ES6 and Webpack to be able to use React or whatever other
+framework to create widgets.  More on that matter in the next cookbook , keep
+reading !</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ipyreact</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="developer-guide.html">Developer guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cookbook-series.html">Cookbooks series on how to build a widget for Jupyter from scratch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-widget.html">Create a Custom widget</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="developer-guide.html">Developer guide</a><ul>
+  <li><a href="cookbook-series.html">Cookbooks series on how to build a widget for Jupyter from scratch</a><ul>
+      <li>Previous: <a href="nbextension_trial.html" title="previous chapter">Notebook Extension</a></li>
+      <li>Next: <a href="react_nbextension_trial.html" title="next chapter">React Extension trial</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, weatherforce.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/comms_trial.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quickstart &#8212; ipyreact 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="widget list" href="widget-list.html" />
+    <link rel="prev" title="Install ipyreact" href="user-install.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>This guide assumes that you are using a linux based system.</p>
+</div>
+<div class="section" id="system-requirements">
+<h2>System requirements<a class="headerlink" href="#system-requirements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>npm</p></li>
+<li><p>python3 (it has been tested using python 3.7)</p></li>
+<li><p>pip</p></li>
+</ul>
+</div>
+<div class="section" id="building-javascript">
+<h2>Building JavaScript<a class="headerlink" href="#building-javascript" title="Permalink to this headline">¶</a></h2>
+<p>This builds the react javascript.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>npm install -C nbextensions_srcs <span class="o">&amp;&amp;</span> npm run dev -C nbextensions_srcs
+</pre></div>
+</div>
+<p>You should now have a nbextensions_dists folder</p>
+<div class="section" id="installing-python-packages">
+<h3>Installing Python packages<a class="headerlink" href="#installing-python-packages" title="Permalink to this headline">¶</a></h3>
+<p>For installing the python packages an we recommend using a virtual environment</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m venv ipyreactvenv
+<span class="nb">source</span> ipyreactvenv/bin/activate
+pip install -r dev_requirements.txt
+pip install .
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="running-jupyter-notebook">
+<h2>Running Jupyter notebook<a class="headerlink" href="#running-jupyter-notebook" title="Permalink to this headline">¶</a></h2>
+<p>In the same terminal as your virtual environment run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>jupyter notebook examples/slider.ipynb
+</pre></div>
+</div>
+<p>There are other example ipynb which can be found in the examples folder</p>
+</div>
+<div class="section" id="building-documentation">
+<h2>Building documentation<a class="headerlink" href="#building-documentation" title="Permalink to this headline">¶</a></h2>
+<p>To build the documentation locally:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> docs
+make html
+</pre></div>
+</div>
+<p>HTML files will be created in build/html.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ipyreact</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="user-guide.html">User guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="user-guide.html#overview">Overview</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developer-guide.html">Developer guide</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="user-guide.html">User guide</a><ul>
+      <li>Previous: <a href="user-install.html" title="previous chapter">Install ipyreact</a></li>
+      <li>Next: <a href="widget-list.html" title="next chapter">widget list</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, weatherforce.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/quickstart.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
