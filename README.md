@@ -1,6 +1,6 @@
 # ipyreact
 [![Documentation Status](https://readthedocs.org/projects/ipyreact/badge/?version=latest)](https://ipyreact.readthedocs.io/en/latest/?badge=latest)
-
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/weatherforce/ipyreact/master?filepath=examples)
 This project aim to provide an alternative solution to build widget and use them on a jupyter notebook.
 It uses React for the front end, which provides a simple way to build complex widgets.In addition, It 
 will open the way to the integration of React libraries in Jupyter notebooks, such as material-ui, among
