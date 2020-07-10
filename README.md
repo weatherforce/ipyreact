@@ -41,13 +41,3 @@ jupyter notebook examples/slider.ipynb
 ```
 
 There are other example ipynb which can be found in the examples folder
-## Building documentation
-
-To build the documentation locally:
-
-```bash
-cd docs
-make html
-```
-
-HTML files will be created in build/html.
