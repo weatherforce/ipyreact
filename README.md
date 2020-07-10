@@ -1,4 +1,5 @@
 # ipyreact
+[![Documentation Status](https://readthedocs.org/projects/ipyreact/badge/?version=latest)](https://ipyreact.readthedocs.io/en/latest/?badge=latest)
 
 This project aim to provide an alternative solution to build widget and use them on a jupyter notebook.
 It uses React for the front end, which provides a simple way to build complex widgets.In addition, It 
@@ -40,6 +41,3 @@ jupyter notebook examples/slider.ipynb
 ```
 
 There are other example ipynb which can be found in the examples folder
-
-## Continue on documentation
-[Documentation](https://ipyreact.readthedocs.io/en/latest/)
