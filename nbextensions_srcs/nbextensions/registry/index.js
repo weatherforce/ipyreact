@@ -1,5 +1,8 @@
 const promise = import('base/js/namespace')
 
+/**
+ * WidgetRegistry act as a mapper to reactComponent and enable the layout feature .
+ */
 class WidgetRegistry {
   registerWidget (widgetName, widget) {
     this[widgetName] = widget
