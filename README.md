@@ -7,11 +7,6 @@ others.
 
 ![Alt Text](slider.gif)
 
-
-will provide a Register nbextension that will
-allow to embed widgets into layouts one.
-
-
 ## Installation
 This guide assumes that you are using a linux based system.
 
