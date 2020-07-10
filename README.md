@@ -1,10 +1,14 @@
 # ipyreact
+
+This project aim to provide an alternative solution to build widget and use them on a jupyter notebook.
+It uses React for the front end, which provides a simple way to build complex widgets.In addition, It 
+will open the way to the integration of React libraries in Jupyter notebooks, such as material-ui, among
+others.
+
 ![Alt Text](slider.gif)
 
 
-This is the final repository where the library should live. It aims to provide
-a variety of base widgets, that will be slowly integrated from cookiecutter
-created widgets. In addition, it will provide a Register nbextension that will
+will provide a Register nbextension that will
 allow to embed widgets into layouts one.
 
 
