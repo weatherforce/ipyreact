@@ -1,6 +1,6 @@
 # ipyreact
+![Alt Text](slider.gif)
 
-[Documentation](https://ipyreact.readthedocs.io/en/latest/)
 
 This is the final repository where the library should live. It aims to provide
 a variety of base widgets, that will be slowly integrated from cookiecutter
@@ -41,3 +41,6 @@ jupyter notebook examples/slider.ipynb
 ```
 
 There are other example ipynb which can be found in the examples folder
+
+## Continue on documentation
+[Documentation](https://ipyreact.readthedocs.io/en/latest/)
